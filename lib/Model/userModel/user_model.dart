@@ -9,6 +9,8 @@ abstract class UserModel with _$UserModel{
      const factory UserModel({
             @Default('') String id,
             @Default('') @JsonKey(name: 'email') String? email,
+            @Default('') @JsonKey(name: 'user_name') String? userName,
+            @Default('') @JsonKey(name: 'profile_url') String? profileUrl,
             @Default('') @JsonKey(name: 'token') String? token,
             @Default(Role.user) @JsonKey(name: 'role') Role? userRole,
      }) = _UserModel;

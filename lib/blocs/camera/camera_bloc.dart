@@ -11,12 +11,16 @@ import 'package:fyp_project/repository/media_repository/pickMediaRepository.dart
 import 'package:fyp_project/repository/media_repository/uploadMediaRepository.dart';
 import 'package:fyp_project/utils/enums.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 part 'camera_event.dart';
 part 'camera_state.dart';
 
 
 class CameraBloc extends Bloc<CameraEvent, CamerasState> {
+  
+  final uuid = Uuid();
 
   PickMediaRepository pickMediaRepository;
   UploadMediaRepository uploadMediaRepository;
@@ -108,13 +112,27 @@ class CameraBloc extends Bloc<CameraEvent, CamerasState> {
        try{
 
             MediaModel mediaModel = await submitMediaRepository.getMediaSeverity(filePath: event.filePath);
-            MediaModel updatedModel = mediaModel.copyWith(location: state.address,mediaUrl: state.captureFile!.path);
-            String currentUser = FirebaseAuth.instance.currentUser!.uid;
+            String currentDateTime = DateFormat("dd MMM yyyy 'At' hh:mm a").format(DateTime.now());
+            User currentUser = FirebaseAuth.instance.currentUser!;
+            String userName = currentUser.displayName==null ? 
+             currentUser.email!.split('@').first:currentUser.displayName!;
 
-            await firebaseRepository.pushUserMediaData(userId: currentUser,data: updatedModel.toJson());
+            MediaModel updatedModel = mediaModel.copyWith(
+              reportId: uuid.v4(),
+              userName: userName,
+              userToken: currentUser.uid,
+              userProfileUrl: currentUser.photoURL ?? "",
+              location: state.address,
+              mediaUrl: state.captureFile!.path,
+              timeStamp: currentDateTime);
+ 
+            print(updatedModel);
+
+            await firebaseRepository.setData(collectionPath: "UsersMedia",docpath: updatedModel.reportId!, data : updatedModel.toJson());
             emit(state.copyWith(newSubmitRequestStatus: SubmitRequestStatus.success));
 
        } catch (error){
+            print(error.toString());
            emit(state.copyWith(newError: error.toString(),newSubmitRequestStatus: SubmitRequestStatus.error));
        }
 

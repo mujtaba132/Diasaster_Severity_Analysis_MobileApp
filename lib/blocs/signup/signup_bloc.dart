@@ -73,10 +73,11 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       userCredential = await signupRepository.createAccount(email: state.email,password: state.password);
 
       if(userCredential == null)  throw GeneralException('No Credentails created...');
-
+       
        UserModel user = UserModel(
         email:  state.email,
         token: userCredential.user!.uid,
+        userName:state.email.split('@')[0],
       );
 
        await  firebaseRepository.setData(collectionPath: 'Users',docpath: userCredential.user!.uid,data: user.toJson());

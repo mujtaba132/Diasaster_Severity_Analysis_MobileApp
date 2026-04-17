@@ -69,16 +69,14 @@ class FirestoreService {
     }
   }
 
-  Future<void> addUserMedia({
-  required String userId,
-  required Map<String, dynamic> data,
-   }) async {
-  await _db
-      .collection('Users')          
-      .doc(userId)                
-      .collection('UserMedia')   
-      .add(data);               
-  }
 
+  Stream<QuerySnapshot> searchDocsFromCollection({
+    required String collectionPath,
+    required String key,
+    required String query,
+  }) {
+    return _db.collection(collectionPath).where(key , isEqualTo: query).snapshots();
+  }
+   
 
 }

@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp_project/Model/userModel/user_model.dart';
+import 'package:fyp_project/data/exceptions/exceptions.dart';
 import 'package:fyp_project/repository/auth_repository/loginRepository.dart';
 import 'package:fyp_project/repository/firebaseRepository/firebase_repository.dart';
 import 'package:fyp_project/utils/enums.dart';
@@ -59,12 +61,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(state.copyWith(newGoogleLoginStatus: GoogleLoginStatus.loading));
 
     await _loginrepository.loginWithGoogle().then((userCredential) async{
-          
-      UserModel user = UserModel(
+
+      if(userCredential.user==null) throw GeneralException('User not found.');  
+      User user = userCredential.user!;
+      
+      UserModel userModel = UserModel(
         email:  state.email,
-        token: userCredential.user!.uid,
-      );
-          await  _firebaseRepository.setData(collectionPath: 'Users',docpath: userCredential.user!.uid,data: user.toJson());
+        token: user.uid,
+        profileUrl: user.photoURL,
+        userName: user.displayName,
+        );
+          await  _firebaseRepository.setData(collectionPath: 'Users',docpath: user.uid,data: userModel.toJson());
           emit(state.copyWith(newGoogleLoginStatus: GoogleLoginStatus.success));
 
         }).onError((error, stackTrace) {

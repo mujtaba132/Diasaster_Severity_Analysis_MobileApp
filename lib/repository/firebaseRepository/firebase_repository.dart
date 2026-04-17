@@ -112,12 +112,20 @@ class FirebaseRepository {
 
         } 
 
-         Future<void>  pushUserMediaData({required String userId,required Map<String,dynamic> data})
-        async{
-
-                try {
-                   await _firestoreService.addUserMedia(userId: userId,data: data);
-               } on SocketException {
+      
+    
+        Stream<List<QueryDocumentSnapshot>> searchDocFromCollection({
+          required String path,
+          required String key,
+          required String query,
+        })
+       {
+              try{
+                  return  _firestoreService.searchDocsFromCollection(collectionPath: path,key: key,query: query)
+                  .map((event) { 
+                       return event.docs; 
+                    });                  
+              } on SocketException {
                   throw NoInternetException('');
                } on TimeoutException {
                   throw TimeoutException('');
@@ -125,7 +133,6 @@ class FirebaseRepository {
                {
                   throw GeneralException(error.toString());
                }
-
-        } 
+       }
        
 }

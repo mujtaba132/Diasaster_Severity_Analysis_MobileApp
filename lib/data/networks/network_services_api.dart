@@ -76,6 +76,8 @@ class NetworkServicesApi extends BaseApiService{
               throw FobiddenException('');
             case 403:
               throw UnAuthorizedException('');
+            case 502:
+              throw GeneralException('Server error - the server failed to fulfil an apparently valid request');
             default:
               throw GeneralException('something went wrong!');
           }
