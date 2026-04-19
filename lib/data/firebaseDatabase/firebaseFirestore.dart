@@ -79,4 +79,19 @@ class FirestoreService {
   }
    
 
+    Future<void> addSubCollectionData({
+    required String mainCollection,
+    required String mainDocId,
+    required String subCollection,
+    required String subDocId,
+    required Map<String, dynamic> data,
+    }) async {
+    try {
+      await _db.collection(mainCollection).doc(mainDocId).
+        collection(subCollection).doc(subDocId).set(data);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+ 
 }

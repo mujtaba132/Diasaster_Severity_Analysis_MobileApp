@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fyp_project/blocs/bloc/admin_feed_bloc.dart';
+import 'package:fyp_project/blocs/admin_feed/admin_feed_bloc.dart';
 import 'package:fyp_project/config/Components/Custom_filterChip.dart';
 import 'package:fyp_project/utils/enums.dart';
 

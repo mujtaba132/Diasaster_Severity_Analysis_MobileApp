@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_project/Model/mediaModel/media_model.dart';
+import 'package:fyp_project/Pages/comments/citizen_feed_comments.dart';
 import 'package:fyp_project/Pages/feed/disaster_feed/disaster_feed_card/feed_severity/feed_severity_dropdown.dart';
 import 'package:fyp_project/Pages/feed/disaster_feed/disaster_feed_card/feed_severity/feed_severity_indicator.dart';
 import 'package:fyp_project/utils/enums.dart';
@@ -85,7 +86,17 @@ class CardSeverity extends StatelessWidget {
         
          role == Role.admin?
          FeedSeverityDropdown(report: report)
-         :const SizedBox.shrink()
+         :const SizedBox.shrink(),
+
+         role == Role.citizen?
+         TextButton.icon(
+          onPressed: (){
+             showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => CommentSection(postId: report.reportId!));
+         }, label: Text("Add Commment")):const SizedBox.shrink(),
       ],
     ),
   ),

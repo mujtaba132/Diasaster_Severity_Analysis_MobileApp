@@ -13,28 +13,31 @@ class UserFeedList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return BlocBuilder<UserFeedBloc, UserFeedState>(
-        buildWhen: (previous, current) =>
-            previous.userFeedStatus != current.userFeedStatus,
-        builder: (context, state) {
-          if (state.userFeedStatus == UserFeedstatus.loading) {
-            return Center(child: CustomLoading(color: theme.primaryColor));
-          } else if (state.userFeedStatus == UserFeedstatus.error) {
-            return Center(child: CustomException(message: state.error));
-          } else if (state.userFeed.isEmpty) {
-            return Center(child: CustomException(message: "You dont post any content relevent to disaster."));
-          }
-
-          return DisasterFeedList(
-            reports: state.userFeed,
-            role: Role.user,
-            selector: (context, report) {
-                return context.select<UserFeedBloc,MediaModel>((bloc) {
-                    return  bloc.state.userFeedMap[report.reportId] ?? report;
-                });
-            },
-          );
-        },
-      );
+    return Expanded(
+      child: BlocBuilder<UserFeedBloc, UserFeedState>(
+          buildWhen: (previous, current) =>
+              previous.searchedFeed != current.searchedFeed ||
+              previous.userFeedStatus != current.userFeedStatus,
+          builder: (context, state) {
+            if (state.userFeedStatus == UserFeedstatus.loading) {
+              return Center(child: CustomLoading(color: theme.primaryColor));
+            } else if (state.userFeedStatus == UserFeedstatus.error) {
+              return Center(child: CustomException(message: state.error));
+            } else if (state.searchedFeed.isEmpty) {
+              return Center(child: CustomException(message: "You dont post any content relevent to disaster."));
+            }
+      
+            return DisasterFeedList(
+              reports: state.searchedFeed,
+              role: Role.user,
+              selector: (context, report) {
+                  return context.select<UserFeedBloc,MediaModel>((bloc) {
+                      return  bloc.state.userFeedMap[report.reportId] ?? report;
+                  });
+              },
+            );
+          },
+        ),
+    );
   }
 }

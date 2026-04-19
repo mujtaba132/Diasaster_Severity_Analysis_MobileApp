@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fyp_project/Model/mediaModel/media_model.dart';
 import 'package:fyp_project/Pages/feed/disaster_feed/disaster_feed_list.dart';
-import 'package:fyp_project/blocs/bloc/admin_feed_bloc.dart';
+import 'package:fyp_project/blocs/admin_feed/admin_feed_bloc.dart';
 import 'package:fyp_project/config/Components/Custom_Exception.dart';
 import 'package:fyp_project/config/Components/Custom_Loading.dart';
 import 'package:fyp_project/utils/enums.dart';

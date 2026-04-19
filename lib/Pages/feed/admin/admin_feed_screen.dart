@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fyp_project/Pages/feed/admin/admin_feed_filters.dart';
 import 'package:fyp_project/Pages/feed/admin/admin_feed_list.dart';
 import 'package:fyp_project/Pages/feed/admin/admin_feed_search.dart';
-import 'package:fyp_project/blocs/bloc/admin_feed_bloc.dart';
+import 'package:fyp_project/blocs/admin_feed/admin_feed_bloc.dart';
 import 'package:fyp_project/config/Components/Custom_Appbar.dart';
 import 'package:fyp_project/main.dart';
 

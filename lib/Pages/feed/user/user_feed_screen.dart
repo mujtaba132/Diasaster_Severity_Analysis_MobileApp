@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fyp_project/Pages/feed/user/user_feed_list.dart';
 import 'package:fyp_project/Pages/feed/user/user_feed_search.dart';
 import 'package:fyp_project/blocs/user_feed/user_feed_bloc.dart';
+import 'package:fyp_project/config/Components/Custom_Appbar.dart';
 import 'package:fyp_project/main.dart';
 
 
@@ -36,18 +37,21 @@ class _UserFeedListScreenState extends State<UserFeedListScreen> {
 
     return BlocProvider.value(
       value: _userFeedBloc,
-      child: Column(
-         children: [
-                 
-                 const SizedBox(height: 10),
-
-                 UserFeedSearch(textEditingController: _textEditingController),
-
-                 const SizedBox(height: 15),
-
-                UserFeedList(),
-
-         ],
+      child: Scaffold(
+        appBar: CustomAppbar(title: "Yours Posts"),
+        body: Column(
+           children: [
+                   
+                   const SizedBox(height: 10),
+        
+                   UserFeedSearch(textEditingController: _textEditingController),
+        
+                   const SizedBox(height: 15),
+        
+                  UserFeedList(),
+        
+           ],
+        ),
       )
     );
   }

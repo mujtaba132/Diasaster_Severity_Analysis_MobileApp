@@ -7,6 +7,7 @@ import 'package:fyp_project/Core/apptheme.dart';
 import 'package:fyp_project/Providers/BottomNavBar/BottomNavBar.dart';
 import 'package:fyp_project/Providers/Citizen/DataUploadProvider.dart';
 import 'package:fyp_project/blocs/camera/camera_bloc.dart';
+import 'package:fyp_project/blocs/comment/comment_bloc.dart';
 import 'package:fyp_project/blocs/login/login_bloc.dart';
 import 'package:fyp_project/blocs/register_ngo/register_ngo_bloc.dart';
 import 'package:fyp_project/blocs/request_ngo/request_ngo_bloc.dart';
@@ -17,6 +18,7 @@ import 'package:fyp_project/firebase_options.dart';
 import 'package:fyp_project/repository/cloudinary_repository/cloudinaryRepository.dart';
 import 'package:fyp_project/repository/auth_repository/forgetPasswordRepository.dart';
 import 'package:fyp_project/repository/auth_repository/loginRepository.dart';
+import 'package:fyp_project/repository/current_user_repository/current_user_repository.dart';
 import 'package:fyp_project/repository/media_repository/submit_media_repository.dart';
 import 'package:fyp_project/repository/firebaseRepository/firebase_repository.dart';
 import 'package:fyp_project/repository/media_repository/pickMediaRepository.dart';
@@ -71,13 +73,12 @@ void serviceloader()
 {
     getit.registerLazySingleton<SignupRepository>(()=> SignupRepository());
     getit.registerLazySingleton<LoginRepository>(()=> LoginRepository());
-    getit.registerFactory<LoginBloc>(() => 
-        LoginBloc(
+    getit.registerFactory<LoginBloc>(() => LoginBloc(
           getit<LoginRepository>(),
           getit<FirebaseRepository>()));
+
     getit.registerLazySingleton<Forgetpasswordrepository>(() => Forgetpasswordrepository());
-    getit.registerFactory<SignupBloc>(() => 
-       SignupBloc( 
+    getit.registerFactory<SignupBloc>(() =>  SignupBloc( 
         getit<LoginRepository>(), 
         getit<SignupRepository>(),
         getit<FirebaseRepository>()));
@@ -85,8 +86,7 @@ void serviceloader()
     
     getit.registerLazySingleton<Cloudinaryrepository>(() => Cloudinaryrepository());
     getit.registerLazySingleton<FirebaseRepository>(() => FirebaseRepository());
-    getit.registerFactory<RegisterNgoBloc>(() => 
-       RegisterNgoBloc(
+    getit.registerFactory<RegisterNgoBloc>(() =>  RegisterNgoBloc(
         getit<Cloudinaryrepository>(), 
         getit<FirebaseRepository>()));
         
@@ -94,11 +94,15 @@ void serviceloader()
     getit.registerLazySingleton<PickMediaRepository>(() => PickMediaRepository());
     getit.registerLazySingleton<UploadMediaRepository>(() => UploadMediaRepository());
     getit.registerLazySingleton<SubmitMediaRepository>(() => SubmitMediaRepository());
-    getit.registerFactory<CameraBloc>(() => 
-      CameraBloc(
+    getit.registerFactory<CameraBloc>(() =>  CameraBloc(
       getit<PickMediaRepository>(), 
       getit<UploadMediaRepository>(),
       getit<Cloudinaryrepository>(),
       getit<FirebaseRepository>(),
       getit<SubmitMediaRepository>()));
+
+   getit.registerLazySingleton<CurrentUserRepository>(() => CurrentUserRepository());
+   getit.registerFactory<CommentBloc>(() => CommentBloc(
+           getit<FirebaseRepository>(), 
+           getit<CurrentUserRepository>()));
 }

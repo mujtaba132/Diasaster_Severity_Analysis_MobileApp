@@ -22,7 +22,7 @@ class FirebaseRepository {
                }
 
         } 
-
+       
 
          Future<void> updateData({required String path,required Map<String,dynamic> data})
         async{
@@ -134,5 +134,34 @@ class FirebaseRepository {
                   throw GeneralException(error.toString());
                }
        }
+
+
+        Future<void> setSubCollectionData({
+          required String mainCollection,
+          required String mainDoc,
+          required String subCollection,
+          required String subDoc,
+          required Map<String,dynamic> data})
+        async{
+ 
+                try {
+                  
+                   await _firestoreService.addSubCollectionData(
+                    mainCollection: mainCollection,
+                    mainDocId: mainDoc,
+                    subCollection: subCollection,
+                    subDocId: subDoc,
+                    data: data);
+
+               } on SocketException {
+                  throw NoInternetException('');
+               } on TimeoutException {
+                  throw TimeoutException('');
+               } catch (error)
+               {
+                  throw GeneralException(error.toString());
+               }
+
+        } 
        
 }
