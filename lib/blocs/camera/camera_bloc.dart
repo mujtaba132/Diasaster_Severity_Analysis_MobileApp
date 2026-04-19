@@ -13,6 +13,7 @@ import 'package:fyp_project/utils/enums.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 part 'camera_event.dart';
 part 'camera_state.dart';
@@ -80,13 +81,20 @@ class CameraBloc extends Bloc<CameraEvent, CamerasState> {
 
        try{
            String? uploadMediaUri;
+           String? uploadThumbnail;
            Position position = await uploadMediaRepository.getCurrentLocation();
            String address = await uploadMediaRepository.getAddress(position: position);           
            emit(state.copyWith(newAddress: address)); 
 
            String filePath = event.filePath;
            if(filePath.endsWith('mp4') || filePath.endsWith('mov')) {
+
+              String? videoThumbnail = await VideoThumbnail.thumbnailFile(video: filePath);
+              uploadThumbnail = await cloudinaryrepository.uploadCloudinaryImage(filePath: videoThumbnail!);
               uploadMediaUri = await cloudinaryrepository.uploadCloudinaryVideo(filePath: filePath);
+
+              emit(state.copyWith(newVideoThumnail: uploadThumbnail));
+
            } else {
               uploadMediaUri = await cloudinaryrepository.uploadCloudinaryImage(filePath: filePath);
            }
@@ -124,15 +132,14 @@ class CameraBloc extends Bloc<CameraEvent, CamerasState> {
               userProfileUrl: currentUser.photoURL ?? "",
               location: state.address,
               mediaUrl: state.captureFile!.path,
-              timeStamp: currentDateTime);
+              timeStamp: currentDateTime,
+              videoThumbnail: state.videoThumbnail);
  
-            print(updatedModel);
 
             await firebaseRepository.setData(collectionPath: "UsersMedia",docpath: updatedModel.reportId!, data : updatedModel.toJson());
             emit(state.copyWith(newSubmitRequestStatus: SubmitRequestStatus.success));
 
        } catch (error){
-            print(error.toString());
            emit(state.copyWith(newError: error.toString(),newSubmitRequestStatus: SubmitRequestStatus.error));
        }
 

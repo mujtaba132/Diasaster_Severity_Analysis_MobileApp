@@ -15,6 +15,8 @@ class AdminFeedBloc extends Bloc<AdminFeedEvent, AdminFeedState> {
   AdminFeedBloc(this.firebaseRepository) : super(AdminFeedState()) {
     on<OnAdminFeedLoadEvent>(_onCitizenFeedLoad);
     on<OnChangePostStatusEvent>(_onChangePostStatus);
+    on<OnChangeSearchFeildEvent>(_onChangeSearchFeild);
+    on<OnChangePostFilterEvent>(_onChangeFeedFilter);
   }
 
 
@@ -33,7 +35,10 @@ class AdminFeedBloc extends Bloc<AdminFeedEvent, AdminFeedState> {
                         for(var item in adminFeed) item.reportId! : item             
               };
 
-              return state.copyWith(newAdminFeedList: adminFeed,newAdminFeedMap: adminFeedMap,newAdminFeedStatus: AdminFeedstatus.success);
+              final updatedState = state.copyWith(newAdminFeedList: adminFeed);
+              List<MediaModel> updateSearch = _searchandFilterFeed(updatedState);
+
+              return state.copyWith(newAdminFeedList: adminFeed,newSearchedFeed: updateSearch,newAdminFeedMap: adminFeedMap,newAdminFeedStatus: AdminFeedstatus.success);
           }).onError((error, stackTrace) {
                 emit(state.copyWith(newError: error.toString(), newAdminFeedStatus: AdminFeedstatus.error)); 
           });
@@ -53,8 +58,9 @@ class AdminFeedBloc extends Bloc<AdminFeedEvent, AdminFeedState> {
                 return post;
            }).toList();
 
-
-           emit(state.copyWith(newAdminFeedList: updatedList));
+           final updatedState = state.copyWith(newAdminFeedList: updatedList);
+           List<MediaModel> updateSearch = _searchandFilterFeed(updatedState);
+           emit(state.copyWith(newSearchedFeed: updateSearch));
 
            await  firebaseRepository.updateData(path: "UsersMedia/${event.reportId}", data: {"post_status": event.newStatus.name})
            .then((value) {
@@ -64,5 +70,56 @@ class AdminFeedBloc extends Bloc<AdminFeedEvent, AdminFeedState> {
                 emit(state.copyWith(newError: error.toString(),newAdminPostStatus: AdminPoststatus.error));
            });
   }
+
+
+  void _onChangeFeedFilter(OnChangePostFilterEvent event,Emitter<AdminFeedState> emit){
+        
+              final changeFilterState = state.copyWith(newAdminFilter: event.newFilter);
+
+              List<MediaModel> updatedList = _searchandFilterFeed(changeFilterState);
+
+              emit(state.copyWith(newSearchedFeed: updatedList,newAdminFilter: event.newFilter));
+  }
+
+
+   void _onChangeSearchFeild(OnChangeSearchFeildEvent event,Emitter<AdminFeedState> emit){
+          
+             final changeSearchState = state.copyWith(newSearchQuery: event.query);
+
+              List<MediaModel> updatedList = _searchandFilterFeed(changeSearchState);
+
+              emit(state.copyWith(newSearchedFeed: updatedList,newSearchQuery: event.query));
+            
+  }
+
+  List<MediaModel> _searchandFilterFeed(AdminFeedState state){
+          
+            return state.adminFeed.where((report) {
+
+                 bool isSearchMatch = state.searchQuery.isEmpty ||
+                                      report.disasterType!.toLowerCase().
+                                      contains(state.searchQuery.toLowerCase());
+
+                bool isFilteredMatch;
+
+                switch (state.adminFeedFilter) {
+                  case  AdminFeedPostStatus.all:
+                    isFilteredMatch = true;
+                    break;
+                  case  AdminFeedPostStatus.pending:
+                    isFilteredMatch = report.status == CitizenFeedStatus.pending;
+                    break;
+                  case  AdminFeedPostStatus.processing:
+                    isFilteredMatch = report.status == CitizenFeedStatus.processing;
+                    break;
+                  case  AdminFeedPostStatus.approved:
+                    isFilteredMatch = report.status == CitizenFeedStatus.approved;
+                    break;
+                }
+
+                return isSearchMatch && isFilteredMatch;
+            }).toList();
+  }
+
 }
 

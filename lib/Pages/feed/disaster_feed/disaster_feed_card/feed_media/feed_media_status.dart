@@ -18,7 +18,7 @@ class FeedMediaStatus extends StatelessWidget {
                       horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                     color: _getStatusColor(status)
-                        .withOpacity(0.15),
+                        .withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(

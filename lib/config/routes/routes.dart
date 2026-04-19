@@ -41,10 +41,10 @@ class Routes {
          //Camera Module
           case RoutesName.imagePreviewScreen:
              final args = settings.arguments as ImagePreviewArguments;
-             return MaterialPageRoute(builder: (_) => ImagePreviewScreen(file: args.file));
+             return MaterialPageRoute(builder: (_) => ImagePreviewScreen(file: args.file,isNetwork:args.isNetworkImage));
           case RoutesName.videoPreviewScreen:
              final args = settings.arguments as VideoPreviewArguments;
-             return MaterialPageRoute(builder: (_) => VideoPreviewScreen(file: args.file));
+             return MaterialPageRoute(builder: (_) => VideoPreviewScreen(filePath: args.file,isNetworkVideo: args.isNetworkVideo));
              
          //default case
          default:

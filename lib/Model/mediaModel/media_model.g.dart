@@ -15,6 +15,7 @@ _MediaModel _$MediaModelFromJson(Map<String, dynamic> json) => _MediaModel(
   disasterType: json['disaster_type'] as String? ?? '',
   severity: (json['severity'] as num?)?.toDouble() ?? 0.0,
   mediaUrl: json['media_url'] as String? ?? '',
+  videoThumbnail: json['video_thumbnail'] as String? ?? '',
   status:
       $enumDecodeNullable(_$CitizenFeedStatusEnumMap, json['post_status']) ??
       CitizenFeedStatus.pending,
@@ -31,6 +32,7 @@ Map<String, dynamic> _$MediaModelToJson(_MediaModel instance) =>
       'disaster_type': instance.disasterType,
       'severity': instance.severity,
       'media_url': instance.mediaUrl,
+      'video_thumbnail': instance.videoThumbnail,
       'post_status': _$CitizenFeedStatusEnumMap[instance.status],
       'time_stamp': instance.timeStamp,
     };

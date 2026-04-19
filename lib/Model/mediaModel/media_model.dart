@@ -17,6 +17,7 @@ abstract class MediaModel with _$MediaModel{
         @Default('') @JsonKey(name: 'disaster_type') String? disasterType,
         @Default(0.0) @JsonKey(name: 'severity') double? severity,
         @Default('') @JsonKey(name: 'media_url') String? mediaUrl,
+        @Default('') @JsonKey(name: 'video_thumbnail') String? videoThumbnail,
         @Default(CitizenFeedStatus.pending) @JsonKey(name: 'post_status') CitizenFeedStatus? status,
         @Default('') @JsonKey(name: 'time_stamp') String? timeStamp}
       ) = _MediaModel;

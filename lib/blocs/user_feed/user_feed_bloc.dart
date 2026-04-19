@@ -16,10 +16,11 @@ class UserFeedBloc extends Bloc<UserFeedEvent, UserFeedState> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   UserFeedBloc(this.firebaseRepository) : super(UserFeedState()) {
-    on<UserFeedEvent>(_onUserFeedLoad);
+    on<OnUserFeedLoadEvent>(_onUserFeedLoad);
+    on<OnSearchUserFeedEvent>(_onSearchUserFeed);
   }
 
-   void _onUserFeedLoad(UserFeedEvent event,Emitter<UserFeedState> emit) async{
+   void _onUserFeedLoad(OnUserFeedLoadEvent event,Emitter<UserFeedState> emit) async{
           emit(state.copyWith(newUserFeedStatus: UserFeedstatus.loading));
 
           if(_firebaseAuth.currentUser==null)
@@ -40,9 +41,23 @@ class UserFeedBloc extends Bloc<UserFeedEvent, UserFeedState> {
                         for(var item in userFeed) item.reportId! : item             
               };
 
-              return state.copyWith(newuserFeedList: userFeed,newUserFeedMap: userFeedMap,newUserFeedStatus: UserFeedstatus.success);
+              return state.copyWith(newuserFeedList: userFeed,newSearchFeedList: userFeed,newUserFeedMap: userFeedMap,newUserFeedStatus: UserFeedstatus.success);
           }).onError((error, stackTrace) {
                 emit(state.copyWith(newError: error.toString(), newUserFeedStatus: UserFeedstatus.error)); 
           });
+  }
+
+
+
+  void _onSearchUserFeed(OnSearchUserFeedEvent event, Emitter<UserFeedState> emit){
+         
+         String query = event.query.toLowerCase();
+
+         List<MediaModel> searchedList = state.userFeed.where((report) =>
+                                          report.disasterType!.toLowerCase().contains(query))
+                                          .toList();
+
+
+        emit(state.copyWith(newSearchFeedList: searchedList,newSearchQuery: query));      
   }
 }

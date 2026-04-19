@@ -3,12 +3,14 @@ part of 'camera_bloc.dart';
 class CamerasState extends Equatable{
 
   final File? captureFile;
+  final String videoThumbnail;
   final MediaUploadStatus mediaUploadStatus;
   final SubmitRequestStatus submitRequestStatus;
   final String address;
   final String error;
   const CamerasState({
       this.captureFile,
+      this.videoThumbnail = '',
       this.mediaUploadStatus = MediaUploadStatus.initail,
       this.submitRequestStatus = SubmitRequestStatus.initail,
       this.address='',
@@ -18,6 +20,7 @@ class CamerasState extends Equatable{
 
   CamerasState copyWith({
        File? newCaptureFile,
+       String? newVideoThumnail,
        MediaUploadStatus? newMediaUploadStatus,
        SubmitRequestStatus? newSubmitRequestStatus,
        String? newAddress,
@@ -25,6 +28,7 @@ class CamerasState extends Equatable{
   }){
      return CamerasState(
          captureFile: newCaptureFile ?? captureFile,
+         videoThumbnail: newVideoThumnail ?? videoThumbnail,
          mediaUploadStatus: newMediaUploadStatus ?? mediaUploadStatus,
          submitRequestStatus: newSubmitRequestStatus ?? submitRequestStatus,
          address: newAddress  ?? address,
@@ -33,5 +37,5 @@ class CamerasState extends Equatable{
   }
 
   @override
-  List<Object?> get props => [captureFile,mediaUploadStatus,submitRequestStatus,address,error];
+  List<Object?> get props => [captureFile,videoThumbnail,mediaUploadStatus,submitRequestStatus,address,error];
 }

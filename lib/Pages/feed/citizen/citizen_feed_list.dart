@@ -5,59 +5,39 @@ import 'package:fyp_project/Pages/feed/disaster_feed/disaster_feed_list.dart';
 import 'package:fyp_project/blocs/citizen/citizen_feed_bloc.dart';
 import 'package:fyp_project/config/Components/Custom_Exception.dart';
 import 'package:fyp_project/config/Components/Custom_Loading.dart';
-import 'package:fyp_project/main.dart';
 import 'package:fyp_project/utils/enums.dart';
 
-class CitizenFeedListScreen extends StatefulWidget {
-  const CitizenFeedListScreen({super.key});
-
-  @override
-  State<CitizenFeedListScreen> createState() => _CitizenFeedListScreenState();
-}
-
-class _CitizenFeedListScreenState extends State<CitizenFeedListScreen> {
-  late CitizenFeedBloc _citizenFeedBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _citizenFeedBloc = CitizenFeedBloc(getit())..add(OnCitizenFeedLoadEvent());
-  }
-
-  @override
-  void dispose() {
-    _citizenFeedBloc.close();
-    super.dispose();
-  }
+class CitizenFeedList extends StatelessWidget {
+  const CitizenFeedList({super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return BlocProvider.value(
-      value: _citizenFeedBloc,
-      child: BlocBuilder<CitizenFeedBloc, CitizenFeedState>(
-        buildWhen: (previous, current) =>
-            previous.citizenFeedStatus != current.citizenFeedStatus,
-        builder: (context, state) {
-          if (state.citizenFeedStatus == CitizenFeedstatus.loading) {
-            return Center(child: CustomLoading(color: theme.primaryColor));
-          } else if (state.citizenFeedStatus == CitizenFeedstatus.error) {
-            return Center(child: CustomException(message: state.error));
-          } else if (state.citizenFeed.isEmpty) {
-            return Center(child: CustomException(message: "No Feed Available."));
-          }
-
-          return DisasterFeedList(
-            reports: state.citizenFeed,
-            role: Role.citizen,
-            selector: (context, model) {
-                   return context.select<CitizenFeedBloc, MediaModel>(
-                       (bloc) => bloc.state.citizenFeedMap[model.reportId] ?? model,
-                   );
-            },
-          );
-        },
-      ),
-    );
+    return  Expanded(
+                child: BlocBuilder<CitizenFeedBloc, CitizenFeedState>(
+                  buildWhen: (previous, current) =>
+                      previous.searchedFeed != current.searchedFeed ||
+                      previous.citizenFeedStatus != current.citizenFeedStatus,
+                  builder: (context, state) {
+                    if (state.citizenFeedStatus == CitizenFeedstatus.loading) {
+                      return Center(child: CustomLoading(color: theme.primaryColor));
+                    } else if (state.citizenFeedStatus == CitizenFeedstatus.error) {
+                      return Center(child: CustomException(message: state.error));
+                    } else if (state.citizenFeed.isEmpty || state.searchedFeed.isEmpty) {
+                      return Center(child: CustomException(message: "No Feed Available."));
+                    }
+                
+                    return DisasterFeedList(
+                      reports: state.searchedFeed,
+                      role: Role.citizen,
+                      selector: (context, model) {
+                             return context.select<CitizenFeedBloc, MediaModel>(
+                                 (bloc) => bloc.state.citizenFeedMap[model.reportId] ?? model,
+                             );
+                      },
+                    );
+                  },
+                ),
+              );
   }
 }

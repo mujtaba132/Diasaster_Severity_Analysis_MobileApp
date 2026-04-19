@@ -20,3 +20,24 @@ class OnChangePostStatusEvent extends AdminFeedEvent {
    @override
   List<Object?> get props => [newStatus,reportId];
 }
+
+class OnChangePostFilterEvent extends AdminFeedEvent{
+
+  final AdminFeedPostStatus newFilter;
+ 
+  const OnChangePostFilterEvent({required this.newFilter});
+
+   @override
+  List<Object?> get props => [newFilter];
+}
+
+
+class OnChangeSearchFeildEvent extends AdminFeedEvent{
+     
+     final String query;
+
+     const OnChangeSearchFeildEvent({required this.query});
+
+     @override
+     List<Object?> get props => [query];
+}

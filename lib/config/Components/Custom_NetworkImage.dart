@@ -1,35 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_project/config/Components/Custom_Loading.dart';
 
 class CustomNetworkimage extends StatelessWidget {
   final String imageUrl;
-  const CustomNetworkimage({super.key,required this.imageUrl});
+  final double iconSize;
+  final IconData icon;
+  final double height;
+  final String errorText;
+  final double borderRadius;
+  const CustomNetworkimage({
+    super.key,
+    required this.imageUrl,
+    this.iconSize = 40,
+    this.height=450,
+    this.borderRadius=12,
+    this.icon = Icons.image_not_supported,
+    this.errorText = "Media not available"});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return ClipRRect(
-  borderRadius: BorderRadius.circular(16),
+  borderRadius: BorderRadius.circular(borderRadius),
   child: Image.network(
     imageUrl, 
-    height: 450,
+    height: height,
     width: double.infinity,
     fit: BoxFit.cover,
     loadingBuilder: (context, child, loadingProgress) {
       if (loadingProgress == null) return child;
       return SizedBox(
-        height: 450,
+        height: height,
         width: double.infinity,
         child: Center(
-          child: CustomLoading(color: Theme.of(context).primaryColor),
+          child: Text("Loading..",style: theme.textTheme.bodyMedium),
         ),
       );
     },
     errorBuilder: (context, error, stackTrace) {
       return SizedBox(
-        height: 450,
+        height: height,
         width: double.infinity,
         child: Center(
-          child: Icon(Icons.broken_image, size: 50, color: Colors.grey),
+          child:  Container(
+      decoration: BoxDecoration(
+        color: Colors.black12,
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: iconSize, color: Colors.grey),
+          SizedBox(height: 6),
+          Text(
+            errorText,
+            style: TextStyle(color: Colors.grey, fontSize: 12),
+          ),
+        ],
+      ),
+    ),
         ),
       );
     },

@@ -25,3 +25,8 @@ enum CitizenFeedstatus {initail,loading,success,error}
 enum AdminFeedstatus {initail,loading,success,error}
 enum AdminPoststatus {initail,loading,success,error}
 enum UserFeedstatus {initail,loading,success,error}
+
+enum CitizenFeedFilters {all,severe,mild,nodamage}
+enum AdminFeedPostStatus {all,pending,processing,approved}
+
+enum VideoInitializingStatus {initail,loading,success,error}

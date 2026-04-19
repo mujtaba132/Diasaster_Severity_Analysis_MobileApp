@@ -14,6 +14,8 @@ class CitizenFeedBloc extends Bloc<CitizenFeedEvent, CitizenFeedState> {
   FirebaseRepository firebaseRepository;
   CitizenFeedBloc(this.firebaseRepository) : super(CitizenFeedState()) {
     on<OnCitizenFeedLoadEvent>(_onCitizenFeedLoad);
+    on<OnChangeFeedFilterEvent>(_onChangeFeedFilter);
+    on<OnSearchFeedEvent>(_onSearchFeed);
   }
 
 
@@ -32,12 +34,59 @@ class CitizenFeedBloc extends Bloc<CitizenFeedEvent, CitizenFeedState> {
                         for(var item in citizenFeed) item.reportId! : item             
               };
 
-              return state.copyWith(newCitizenFeedList: citizenFeed,newCitizenFeedMap: citizenFeedMap,newcitizenFeedStatus: CitizenFeedstatus.success);
+              return state.copyWith(newCitizenFeedList: citizenFeed,newSearchedFeedList: citizenFeed ,newCitizenFeedMap: citizenFeedMap,newcitizenFeedStatus: CitizenFeedstatus.success);
           }).onError((error, stackTrace) {
                 emit(state.copyWith(newError: error.toString(), newcitizenFeedStatus: CitizenFeedstatus.error)); 
           });
   }
 
+  void _onChangeFeedFilter(OnChangeFeedFilterEvent event,Emitter<CitizenFeedState> emit){
+                  
+                  final changeFilterState = state.copyWith(newCitizenFeedFilter: event.citizenFeedFilter);
 
+                  List<MediaModel> updatedList =  _searchandFilterFeed(changeFilterState);
+
+                  emit(state.copyWith(newSearchedFeedList: updatedList,newCitizenFeedFilter: event.citizenFeedFilter));
+  }
+
+
+  void _onSearchFeed(OnSearchFeedEvent event,Emitter<CitizenFeedState> emit){
+          
+          final changeSearchState = state.copyWith(newSearchQuery: event.query);
+
+          List<MediaModel> updatedFeed = _searchandFilterFeed(changeSearchState);
+
+          emit(state.copyWith(newSearchedFeedList: updatedFeed,newSearchQuery: event.query));
+  }
+
+
+  List<MediaModel> _searchandFilterFeed(CitizenFeedState state){ 
+            
+            return state.citizenFeed.where((report) {
+                  
+                  bool isSearchMatch = state.searchQuery.isEmpty ||
+                                      report.disasterType!.toLowerCase().
+                                      contains(state.searchQuery);
+
+                 bool isFilteredMatch;
+
+                   switch (state.citizenFeedFilter) {
+                   case CitizenFeedFilters.all:
+                     isFilteredMatch = true;
+                     break;
+                    case CitizenFeedFilters.severe:
+                     isFilteredMatch =  report.severity! >= 70.0;
+                     break;
+                    case CitizenFeedFilters.mild:
+                     isFilteredMatch = report.severity! >= 40.0 && report.severity! < 70.0;
+                     break;  
+                    case CitizenFeedFilters.nodamage:
+                     isFilteredMatch = report.severity! < 40.0;
+                     break;
+                 }
+
+                 return isFilteredMatch && isSearchMatch;
+            }).toList();
+  }
 
 }

@@ -22,36 +22,33 @@ class ReportCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Hero(
-        tag: report.reportId!,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: theme.cardColor,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: theme.shadowColor.withOpacity(0.2),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              )
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              
-                    // MEDIA PREVIEW          
-              CardMediaPreview(report: report,role: role),
-
-                   // CONTENT                     
-              CardSeverity(report: report,role: role),
-
-            ]),
+    return Hero(
+      tag: report.reportId!,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          boxShadow: [
+            BoxShadow(
+              color: theme.shadowColor.withOpacity(0.2),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            )
+          ],
         ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            
+                  // MEDIA PREVIEW          
+            GestureDetector(
+              onTap: onTap,
+              child: CardMediaPreview(report: report,role: role)),
+    
+                 // CONTENT                     
+            CardSeverity(report: report,role: role),
+    
+          ]),   
       ),
     );
   }

@@ -9,3 +9,12 @@ class UserFeedEvent extends Equatable {
 
 
 class OnUserFeedLoadEvent extends UserFeedEvent {}
+
+class OnSearchUserFeedEvent extends UserFeedEvent {
+       final String query;
+
+       const OnSearchUserFeedEvent({required this.query});
+
+       @override
+        List<Object?> get props => [query];
+}

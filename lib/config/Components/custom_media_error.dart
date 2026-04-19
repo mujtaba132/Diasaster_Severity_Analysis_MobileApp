@@ -1,25 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
-
-class FileImages extends StatelessWidget {
-  final File file;
-  const FileImages({super.key,required this.file});
+class CustomMediaError extends StatelessWidget {
+  const CustomMediaError({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return 
-    file.path.isEmpty?
-    Image.file(
-        file,
-        fit: BoxFit.cover,
-      ):
-    SizedBox(
-        height: double.infinity,
-        width: double.infinity,
-        child: Center(
-          child:  Container(
+    return Container(
       decoration: BoxDecoration(
         color: Colors.black12,
         borderRadius: BorderRadius.circular(12),
@@ -31,13 +17,11 @@ class FileImages extends StatelessWidget {
           Icon(Icons.image_not_supported, size: 40, color: Colors.grey),
           SizedBox(height: 6),
           Text(
-            "Image not found!!",
+            "Image not available",
             style: TextStyle(color: Colors.grey, fontSize: 12),
           ),
         ],
       ),
-    ),
-        ),
-      );
+    );
   }
 }

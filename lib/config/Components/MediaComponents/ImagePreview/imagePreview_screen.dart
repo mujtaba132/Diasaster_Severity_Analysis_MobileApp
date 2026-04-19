@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fyp_project/config/Components/Custom_Appbar.dart';
+import 'package:fyp_project/config/Components/Custom_NetworkImage.dart';
 import 'package:fyp_project/config/Components/MediaComponents/ImagePreview/build_images.dart';
 
 class ImagePreviewScreen extends StatefulWidget {
@@ -26,10 +27,15 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
       child: Scaffold(
         backgroundColor: Colors.black54,
         appBar: CustomAppbar(title: widget.file.uri.pathSegments.last),
-        body:  Positioned.fill(
-                child: widget.isNetwork ? 
-                   NetworkImages(filePath: widget.file.path):
-                   FileImages(file: File(widget.file.path))),
+        body:  widget.isNetwork ? 
+                   Padding(
+                     padding: const EdgeInsets.all(8.0),
+                     child: Center(child: 
+                     CustomNetworkimage(
+                      imageUrl: widget.file.path,
+                      )),
+                   ):
+                   FileImages(file: File(widget.file.path)),
         ),
     );
   }

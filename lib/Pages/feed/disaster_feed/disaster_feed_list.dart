@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fyp_project/Model/mediaModel/media_model.dart';
 import 'package:fyp_project/Pages/feed/disaster_feed/disaster_feed_card/disaster_feed_card.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:fyp_project/config/routes/routes_arguments/imagePreview_arguments.dart';
+import 'package:fyp_project/config/routes/routes_arguments/videoPreview_arguments.dart';
+import 'package:fyp_project/config/routes/routes_name.dart';
 import 'package:fyp_project/utils/enums.dart';
 
 class DisasterFeedList extends StatelessWidget {
@@ -13,9 +18,7 @@ class DisasterFeedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        return Scaffold(
-      appBar: AppBar(title: const Text("Reports")),
-      body:AnimationLimiter(
+        return AnimationLimiter(
   child: ListView.builder(
     itemCount: reports.length,
     itemBuilder: (context, index) {
@@ -32,11 +35,19 @@ class DisasterFeedList extends StatelessWidget {
               report: report,
               onTap: () {
 
-                  //  if(report.mediaUrl!.endsWith(".mp4") || report.mediaUrl!.endsWith(".mov")){
-                  //     Navigator.pushNamed(context, RoutesName.videoPreviewScreen,arguments: VideoPreviewArguments(file: File(report.mediaUrl!)));
-                  //  } else {
-                  //     Navigator.pushNamed(context, RoutesName.imagePreviewScreen,arguments: ImagePreviewArguments(file: File(report.mediaUrl!)));
-                  //  }
+                   if(report.mediaUrl!.endsWith(".mp4") || report.mediaUrl!.endsWith(".mov")){
+                      Navigator.pushNamed(
+                        context, 
+                        RoutesName.videoPreviewScreen,
+                        arguments: VideoPreviewArguments(file: File(report.mediaUrl!),
+                        isNetworkVideo: true));
+                   } else {
+                      Navigator.pushNamed(
+                      context, 
+                      RoutesName.imagePreviewScreen,
+                      arguments: ImagePreviewArguments(file: File(report.mediaUrl!),
+                      isNetworkImage: true));
+                   }
                    
               },
             ),
@@ -44,8 +55,7 @@ class DisasterFeedList extends StatelessWidget {
         ),
       );
     },
-  ),
-)
+  )
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fyp_project/utils/enums.dart';
 import 'package:video_player/video_player.dart';
 
 part 'video_player_event.dart';
@@ -17,10 +18,13 @@ class VideoPlayerBloc extends Bloc<VideoPlayerEvent, VideoPlayerState> {
 
   
   Future<void> _onIntialize(OnInitailizeVideoEvent event , Emitter<VideoPlayerState> emit)async{
-
+             emit(state.copyWith(
+              newVideoInitialStatus: VideoInitializingStatus.loading
+            ));
             await _videoController.initialize();
+
             emit(state.copyWith(
-              newIsInitiallized: true,
+              newVideoInitialStatus: VideoInitializingStatus.success,
               newDuration: _videoController.value.duration,
             ));
 

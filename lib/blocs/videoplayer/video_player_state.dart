@@ -7,12 +7,14 @@ class VideoPlayerState extends  Equatable{
   final bool isPlaying;
   final Duration position;
   final Duration duration;
+  final VideoInitializingStatus videoInitializingStatus;
 
   const VideoPlayerState({
        this.isInitialized = false,
        this.isPlaying = false,
        this.position = Duration.zero,
        this.duration = Duration.zero,
+       this.videoInitializingStatus = VideoInitializingStatus.initail
   });
 
 
@@ -20,16 +22,18 @@ class VideoPlayerState extends  Equatable{
           bool? newIsInitiallized,
           bool? newIsPlaying,
           Duration? newPosition,
-          Duration? newDuration})
+          Duration? newDuration,
+          VideoInitializingStatus? newVideoInitialStatus})
   {
      return VideoPlayerState(
       isInitialized: newIsInitiallized ?? isInitialized,
       isPlaying: newIsPlaying ?? isPlaying, 
       position: newPosition ?? position, 
-      duration: newDuration ?? duration);
+      duration: newDuration ?? duration,
+      videoInitializingStatus: newVideoInitialStatus ?? videoInitializingStatus);
   }
   
   @override
-  List<Object?> get props => [isInitialized,isPlaying,position,duration];
+  List<Object?> get props => [isInitialized,videoInitializingStatus,isPlaying,position,duration];
 
 }

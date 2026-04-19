@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp_project/Model/mediaModel/media_model.dart';
 import 'package:fyp_project/Pages/feed/disaster_feed/disaster_feed_card/feed_media/feed_media_header.dart';
 import 'package:fyp_project/Pages/feed/disaster_feed/disaster_feed_card/feed_media/feed_media_status.dart';
+import 'package:fyp_project/config/Components/Custom_NetworkImage.dart';
 import 'package:fyp_project/utils/enums.dart';
 
 class CardMediaPreview extends StatelessWidget {
@@ -22,15 +23,16 @@ class CardMediaPreview extends StatelessWidget {
   children: [
 
     // Media
-    ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      child: Image.network(
-        report.mediaUrl!,
-        height: 170,
-        width: double.infinity,
-        fit: BoxFit.cover,
-      ),
-    ),
+     isVideo(report.mediaUrl!)?
+      CustomNetworkimage(
+      imageUrl: report.videoThumbnail!,
+      height: 270,
+      borderRadius: 0,
+      errorText: 'Thumbnail not found',)
+     : CustomNetworkimage(
+      imageUrl: report.mediaUrl!,
+      height: 270,
+      borderRadius: 0),
 
     //  Blur Effect
     Positioned.fill(
@@ -65,20 +67,6 @@ class CardMediaPreview extends StatelessWidget {
         imageUrl: report.userProfileUrl!) 
     ),
 
-    // Floating Title (VERY NICE)
-    Positioned(
-      bottom: 10,
-      left: 12,
-      right: 12,
-      child: Text(
-        report.disasterType!,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
     
     FeedMediaStatus(status: report.status!,role: role),
 
@@ -86,7 +74,7 @@ class CardMediaPreview extends StatelessWidget {
     if (isVideo(report.mediaUrl!))
       const Positioned.fill(
         child: Center(
-          child: Icon(Icons.play_circle_fill, size: 60, color: Colors.white),
+          child: Icon(Icons.play_circle_rounded, size: 60, color: Colors.white),
         ),
       ),
   ]);

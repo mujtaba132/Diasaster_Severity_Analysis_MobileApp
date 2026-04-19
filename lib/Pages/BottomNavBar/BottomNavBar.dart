@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_project/Pages/Camera/camera_screen.dart';
-import 'package:fyp_project/Pages/feed/admin/admin_feed_list.dart';
-import 'package:fyp_project/Pages/feed/citizen/citizen_feed_list.dart';
-import 'package:fyp_project/Pages/feed/user/user_feed_list.dart';
+import 'package:fyp_project/Pages/feed/admin/admin_feed_screen.dart';
+import 'package:fyp_project/Pages/feed/citizen/citizen_feed_screen.dart';
+import 'package:fyp_project/Pages/feed/user/user_feed_screen.dart';
 import 'package:fyp_project/Providers/BottomNavBar/BottomNavBar.dart';
 import 'package:provider/provider.dart';
 import 'package:molten_navigationbar_flutter/molten_navigationbar_flutter.dart';
@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
     final pages = [
       CameraScreen(),
       CitizenFeedListScreen(),
-      AdminFeedListScreen(),
+      AdminFeedScreen(),
       UserFeedListScreen()
     ];
 

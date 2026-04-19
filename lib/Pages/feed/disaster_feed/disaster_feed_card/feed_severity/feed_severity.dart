@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fyp_project/Model/mediaModel/media_model.dart';
 import 'package:fyp_project/Pages/feed/disaster_feed/disaster_feed_card/feed_severity/feed_severity_dropdown.dart';
 import 'package:fyp_project/Pages/feed/disaster_feed/disaster_feed_card/feed_severity/feed_severity_indicator.dart';
-import 'package:fyp_project/config/Components/Custom_Dropdown.dart';
 import 'package:fyp_project/utils/enums.dart';
 
 class CardSeverity extends StatelessWidget {
@@ -15,9 +14,9 @@ class CardSeverity extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return  Padding(
-  padding: const EdgeInsets.all(12),
+  padding: const EdgeInsets.all(0),
   child: Container(
-    padding: const EdgeInsets.all(10),
+    padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(18),
       color: theme.cardColor,
@@ -32,20 +31,20 @@ class CardSeverity extends StatelessWidget {
     child: Row(
       children: [
 
-        /// Circular Severity Indicator
+        // Circular Severity Indicator
        AnimatedSeverityIndicator(
              severity: report.severity!
              ),
 
         const SizedBox(width: 24),
 
-        /// Info Section
+        // Info Section
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              /// Disaster Type
+              // Disaster Type
               Text(
                 report.disasterType!,
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -56,7 +55,7 @@ class CardSeverity extends StatelessWidget {
 
               const SizedBox(height: 5),
 
-              /// Subtitle
+              // Subtitle
               Text(
                 report.location!,
                 style: theme.textTheme.bodySmall?.copyWith(
@@ -67,10 +66,12 @@ class CardSeverity extends StatelessWidget {
 
               const SizedBox(height: 8),
 
+              // TimeStamp
               Text(
                 report.timeStamp!,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.hintColor,
+                  fontSize: 10,
                   overflow: TextOverflow.ellipsis
                 ),
               ),
