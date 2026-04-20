@@ -14,8 +14,8 @@ class CitizenCommentSendBtn extends StatelessWidget {
       builder: (context, state) {
         return GestureDetector(
           onTap: () {
-            context.read<CommentBloc>().add(OnAddPostCommentsEvent(postId: postId));
             if (textEditingController.text.trim().isEmpty) return;
+            context.read<CommentBloc>().add(OnAddPostCommentsEvent(postId: postId));
             textEditingController.clear();
           },
           child: AnimatedContainer(
@@ -25,7 +25,7 @@ class CitizenCommentSendBtn extends StatelessWidget {
               shape: BoxShape.circle,
               color: theme.colorScheme.primary,
             ),
-            child: const Icon(Icons.send, color: Colors.white),
+            child: const Icon(Icons.done, color: Colors.white),
           ),
         );
       },

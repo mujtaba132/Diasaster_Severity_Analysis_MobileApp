@@ -8,7 +8,7 @@ class CustomException extends StatefulWidget {
 
   const CustomException({
     super.key,
-    this.title='Ohh noo...',
+    this.title='Something wrong',
     required this.message,
     this.icon=Icons.error,
     this.onRetry,

@@ -9,7 +9,14 @@ abstract class CommentEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class OnLoadPostCommentsEvent extends CommentEvent{}
+class OnLoadPostCommentsEvent extends CommentEvent{
+   final String postId;
+  
+   const OnLoadPostCommentsEvent({required this.postId});
+
+   @override
+   List<Object?> get props => [postId];
+}
 
 class OnChangeCommentFeildEvent extends CommentEvent{
      
@@ -31,3 +38,15 @@ class OnAddPostCommentsEvent extends CommentEvent{
    List<Object?> get props => [postId];
 
 }
+
+class OnFavouriteCommentEvent extends CommentEvent{
+
+   final String commentId;
+   final String postId;
+  
+   const OnFavouriteCommentEvent({required this.commentId,required this.postId});
+
+   @override
+   List<Object?> get props => [commentId,postId];
+}
+

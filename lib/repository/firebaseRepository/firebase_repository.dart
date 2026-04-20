@@ -163,5 +163,29 @@ class FirebaseRepository {
                }
 
         } 
+
+       Stream<List<QueryDocumentSnapshot>> listenToSubCollectionData({
+          required String mainCollection,
+          required String mainDoc,
+          required String subCollection,
+       })
+       {
+              try{
+                  return  _firestoreService.listenToSubCollection(
+                    mainCollection: mainCollection,
+                    mainDocId: mainDoc,
+                    subCollection: subCollection
+                  ).map((event) { 
+                         return event.docs; 
+                    });                  
+              } on SocketException {
+                  throw NoInternetException('');
+               } on TimeoutException {
+                  throw TimeoutException('');
+               } catch (error)
+               {
+                  throw GeneralException(error.toString());
+               }
+       }
        
 }

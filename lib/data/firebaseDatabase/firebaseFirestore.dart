@@ -92,6 +92,17 @@ class FirestoreService {
     } catch (e) {
       throw Exception(e.toString());
     }
+   }
+
+    Stream<QuerySnapshot> listenToSubCollection({
+    required String mainCollection,
+    required String mainDocId,
+    required String subCollection,
+  }) {
+    return _db.collection(mainCollection).doc(mainDocId).
+        collection(subCollection).snapshots();
   }
+
+
  
 }

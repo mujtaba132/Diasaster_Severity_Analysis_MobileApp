@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CommentModel {
 
-@JsonKey(name: 'comment_id') String? get commentId;@JsonKey(name: 'user_name') String? get userName;@JsonKey(name: 'user_profile_url') String? get userProfileUrl;@JsonKey(name: 'comment') String? get comment;
+@JsonKey(name: 'comment_id') String? get commentId;@JsonKey(name: 'user_name') String? get userName;@JsonKey(name: 'user_profile_url') String? get userProfileUrl;@JsonKey(name: 'comment') String? get comment;@JsonKey(name: 'is_like') bool? get isLike;@JsonKey(name: 'likes') int? get likes;@JsonKey(name: 'time_stamp', fromJson: dateTimeFromJson, toJson: dateTimeToJson) DateTime? get timeStamp;
 /// Create a copy of CommentModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CommentModelCopyWith<CommentModel> get copyWith => _$CommentModelCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentModel&&(identical(other.commentId, commentId) || other.commentId == commentId)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.userProfileUrl, userProfileUrl) || other.userProfileUrl == userProfileUrl)&&(identical(other.comment, comment) || other.comment == comment));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentModel&&(identical(other.commentId, commentId) || other.commentId == commentId)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.userProfileUrl, userProfileUrl) || other.userProfileUrl == userProfileUrl)&&(identical(other.comment, comment) || other.comment == comment)&&(identical(other.isLike, isLike) || other.isLike == isLike)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.timeStamp, timeStamp) || other.timeStamp == timeStamp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,commentId,userName,userProfileUrl,comment);
+int get hashCode => Object.hash(runtimeType,commentId,userName,userProfileUrl,comment,isLike,likes,timeStamp);
 
 @override
 String toString() {
-  return 'CommentModel(commentId: $commentId, userName: $userName, userProfileUrl: $userProfileUrl, comment: $comment)';
+  return 'CommentModel(commentId: $commentId, userName: $userName, userProfileUrl: $userProfileUrl, comment: $comment, isLike: $isLike, likes: $likes, timeStamp: $timeStamp)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CommentModelCopyWith<$Res>  {
   factory $CommentModelCopyWith(CommentModel value, $Res Function(CommentModel) _then) = _$CommentModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'comment_id') String? commentId,@JsonKey(name: 'user_name') String? userName,@JsonKey(name: 'user_profile_url') String? userProfileUrl,@JsonKey(name: 'comment') String? comment
+@JsonKey(name: 'comment_id') String? commentId,@JsonKey(name: 'user_name') String? userName,@JsonKey(name: 'user_profile_url') String? userProfileUrl,@JsonKey(name: 'comment') String? comment,@JsonKey(name: 'is_like') bool? isLike,@JsonKey(name: 'likes') int? likes,@JsonKey(name: 'time_stamp', fromJson: dateTimeFromJson, toJson: dateTimeToJson) DateTime? timeStamp
 });
 
 
@@ -65,13 +65,16 @@ class _$CommentModelCopyWithImpl<$Res>
 
 /// Create a copy of CommentModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? commentId = freezed,Object? userName = freezed,Object? userProfileUrl = freezed,Object? comment = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? commentId = freezed,Object? userName = freezed,Object? userProfileUrl = freezed,Object? comment = freezed,Object? isLike = freezed,Object? likes = freezed,Object? timeStamp = freezed,}) {
   return _then(_self.copyWith(
 commentId: freezed == commentId ? _self.commentId : commentId // ignore: cast_nullable_to_non_nullable
 as String?,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String?,userProfileUrl: freezed == userProfileUrl ? _self.userProfileUrl : userProfileUrl // ignore: cast_nullable_to_non_nullable
 as String?,comment: freezed == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,isLike: freezed == isLike ? _self.isLike : isLike // ignore: cast_nullable_to_non_nullable
+as bool?,likes: freezed == likes ? _self.likes : likes // ignore: cast_nullable_to_non_nullable
+as int?,timeStamp: freezed == timeStamp ? _self.timeStamp : timeStamp // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -156,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment_id')  String? commentId, @JsonKey(name: 'user_name')  String? userName, @JsonKey(name: 'user_profile_url')  String? userProfileUrl, @JsonKey(name: 'comment')  String? comment)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment_id')  String? commentId, @JsonKey(name: 'user_name')  String? userName, @JsonKey(name: 'user_profile_url')  String? userProfileUrl, @JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'is_like')  bool? isLike, @JsonKey(name: 'likes')  int? likes, @JsonKey(name: 'time_stamp', fromJson: dateTimeFromJson, toJson: dateTimeToJson)  DateTime? timeStamp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CommentModel() when $default != null:
-return $default(_that.commentId,_that.userName,_that.userProfileUrl,_that.comment);case _:
+return $default(_that.commentId,_that.userName,_that.userProfileUrl,_that.comment,_that.isLike,_that.likes,_that.timeStamp);case _:
   return orElse();
 
 }
@@ -177,10 +180,10 @@ return $default(_that.commentId,_that.userName,_that.userProfileUrl,_that.commen
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment_id')  String? commentId, @JsonKey(name: 'user_name')  String? userName, @JsonKey(name: 'user_profile_url')  String? userProfileUrl, @JsonKey(name: 'comment')  String? comment)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'comment_id')  String? commentId, @JsonKey(name: 'user_name')  String? userName, @JsonKey(name: 'user_profile_url')  String? userProfileUrl, @JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'is_like')  bool? isLike, @JsonKey(name: 'likes')  int? likes, @JsonKey(name: 'time_stamp', fromJson: dateTimeFromJson, toJson: dateTimeToJson)  DateTime? timeStamp)  $default,) {final _that = this;
 switch (_that) {
 case _CommentModel():
-return $default(_that.commentId,_that.userName,_that.userProfileUrl,_that.comment);case _:
+return $default(_that.commentId,_that.userName,_that.userProfileUrl,_that.comment,_that.isLike,_that.likes,_that.timeStamp);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +200,10 @@ return $default(_that.commentId,_that.userName,_that.userProfileUrl,_that.commen
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'comment_id')  String? commentId, @JsonKey(name: 'user_name')  String? userName, @JsonKey(name: 'user_profile_url')  String? userProfileUrl, @JsonKey(name: 'comment')  String? comment)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'comment_id')  String? commentId, @JsonKey(name: 'user_name')  String? userName, @JsonKey(name: 'user_profile_url')  String? userProfileUrl, @JsonKey(name: 'comment')  String? comment, @JsonKey(name: 'is_like')  bool? isLike, @JsonKey(name: 'likes')  int? likes, @JsonKey(name: 'time_stamp', fromJson: dateTimeFromJson, toJson: dateTimeToJson)  DateTime? timeStamp)?  $default,) {final _that = this;
 switch (_that) {
 case _CommentModel() when $default != null:
-return $default(_that.commentId,_that.userName,_that.userProfileUrl,_that.comment);case _:
+return $default(_that.commentId,_that.userName,_that.userProfileUrl,_that.comment,_that.isLike,_that.likes,_that.timeStamp);case _:
   return null;
 
 }
@@ -212,13 +215,16 @@ return $default(_that.commentId,_that.userName,_that.userProfileUrl,_that.commen
 @JsonSerializable()
 
 class _CommentModel implements CommentModel {
-  const _CommentModel({@JsonKey(name: 'comment_id') this.commentId = '', @JsonKey(name: 'user_name') this.userName = '', @JsonKey(name: 'user_profile_url') this.userProfileUrl = '', @JsonKey(name: 'comment') this.comment = ''});
+  const _CommentModel({@JsonKey(name: 'comment_id') this.commentId = '', @JsonKey(name: 'user_name') this.userName = '', @JsonKey(name: 'user_profile_url') this.userProfileUrl = '', @JsonKey(name: 'comment') this.comment = '', @JsonKey(name: 'is_like') this.isLike = false, @JsonKey(name: 'likes') this.likes = 0, @JsonKey(name: 'time_stamp', fromJson: dateTimeFromJson, toJson: dateTimeToJson) this.timeStamp});
   factory _CommentModel.fromJson(Map<String, dynamic> json) => _$CommentModelFromJson(json);
 
 @override@JsonKey(name: 'comment_id') final  String? commentId;
 @override@JsonKey(name: 'user_name') final  String? userName;
 @override@JsonKey(name: 'user_profile_url') final  String? userProfileUrl;
 @override@JsonKey(name: 'comment') final  String? comment;
+@override@JsonKey(name: 'is_like') final  bool? isLike;
+@override@JsonKey(name: 'likes') final  int? likes;
+@override@JsonKey(name: 'time_stamp', fromJson: dateTimeFromJson, toJson: dateTimeToJson) final  DateTime? timeStamp;
 
 /// Create a copy of CommentModel
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommentModel&&(identical(other.commentId, commentId) || other.commentId == commentId)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.userProfileUrl, userProfileUrl) || other.userProfileUrl == userProfileUrl)&&(identical(other.comment, comment) || other.comment == comment));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommentModel&&(identical(other.commentId, commentId) || other.commentId == commentId)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.userProfileUrl, userProfileUrl) || other.userProfileUrl == userProfileUrl)&&(identical(other.comment, comment) || other.comment == comment)&&(identical(other.isLike, isLike) || other.isLike == isLike)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.timeStamp, timeStamp) || other.timeStamp == timeStamp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,commentId,userName,userProfileUrl,comment);
+int get hashCode => Object.hash(runtimeType,commentId,userName,userProfileUrl,comment,isLike,likes,timeStamp);
 
 @override
 String toString() {
-  return 'CommentModel(commentId: $commentId, userName: $userName, userProfileUrl: $userProfileUrl, comment: $comment)';
+  return 'CommentModel(commentId: $commentId, userName: $userName, userProfileUrl: $userProfileUrl, comment: $comment, isLike: $isLike, likes: $likes, timeStamp: $timeStamp)';
 }
 
 
@@ -253,7 +259,7 @@ abstract mixin class _$CommentModelCopyWith<$Res> implements $CommentModelCopyWi
   factory _$CommentModelCopyWith(_CommentModel value, $Res Function(_CommentModel) _then) = __$CommentModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'comment_id') String? commentId,@JsonKey(name: 'user_name') String? userName,@JsonKey(name: 'user_profile_url') String? userProfileUrl,@JsonKey(name: 'comment') String? comment
+@JsonKey(name: 'comment_id') String? commentId,@JsonKey(name: 'user_name') String? userName,@JsonKey(name: 'user_profile_url') String? userProfileUrl,@JsonKey(name: 'comment') String? comment,@JsonKey(name: 'is_like') bool? isLike,@JsonKey(name: 'likes') int? likes,@JsonKey(name: 'time_stamp', fromJson: dateTimeFromJson, toJson: dateTimeToJson) DateTime? timeStamp
 });
 
 
@@ -270,13 +276,16 @@ class __$CommentModelCopyWithImpl<$Res>
 
 /// Create a copy of CommentModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? commentId = freezed,Object? userName = freezed,Object? userProfileUrl = freezed,Object? comment = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? commentId = freezed,Object? userName = freezed,Object? userProfileUrl = freezed,Object? comment = freezed,Object? isLike = freezed,Object? likes = freezed,Object? timeStamp = freezed,}) {
   return _then(_CommentModel(
 commentId: freezed == commentId ? _self.commentId : commentId // ignore: cast_nullable_to_non_nullable
 as String?,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String?,userProfileUrl: freezed == userProfileUrl ? _self.userProfileUrl : userProfileUrl // ignore: cast_nullable_to_non_nullable
 as String?,comment: freezed == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,isLike: freezed == isLike ? _self.isLike : isLike // ignore: cast_nullable_to_non_nullable
+as bool?,likes: freezed == likes ? _self.likes : likes // ignore: cast_nullable_to_non_nullable
+as int?,timeStamp: freezed == timeStamp ? _self.timeStamp : timeStamp // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

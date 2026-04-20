@@ -22,11 +22,13 @@ class _CommentSectionState extends State<CommentSection>
   late AnimationController _animationController;
   late CommentBloc _commentBloc;
 
+
   @override
   void initState() {
     super.initState();
 
-    _commentBloc = getit<CommentBloc>()..add(OnLoadPostCommentsEvent());
+    _commentBloc = getit<CommentBloc>()..add(OnLoadPostCommentsEvent(postId: widget.postId));
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
@@ -37,7 +39,6 @@ class _CommentSectionState extends State<CommentSection>
 
   @override
   void dispose() {
-
     _commentBloc.close();
     _controller.dispose();
     _animationController.dispose();
@@ -51,45 +52,47 @@ class _CommentSectionState extends State<CommentSection>
 
     return BlocProvider.value(
       value: _commentBloc,
-      child: AnimatedBuilder(
-        animation: _animationController,
-        builder: (_, child) {
-          return Transform.translate(
-            offset: Offset(0, (1 - _animationController.value) * 500),
-            child: child,
-          );
-        },
-        child: DraggableScrollableSheet(
-          initialChildSize: 0.75,
-          minChildSize: 0.5,
-          maxChildSize: 0.95,
-          builder: (_, controller) {
-            return ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(25),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                child: Container(
-                  color: theme.colorScheme.surface.withOpacity(0.9),
-                  child: Column(
-                    children: [
-                      
-                     CitizenFeedCommentHeader(),
-      
-                     CitizenFeedCommentList(),
-      
-                     CitizenFeedCommentBottom(
-                      textEditingController: _controller,
-                      postId: widget.postId
-                      ),
-      
-                    ],
-                  ),
-                ),
-              ),
+      child: SafeArea(
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (_, child) {
+            return Transform.translate(
+              offset: Offset(0, (1 - _animationController.value) * 500),
+              child: child,
             );
           },
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.75,
+            minChildSize: 0.5,
+            maxChildSize: 0.95,
+            builder: (_, controller) {
+              return ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(25),
+                ),
+                child: Container(
+                  color: theme.scaffoldBackgroundColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        
+                       CitizenFeedCommentHeader(),
+                          
+                       CitizenFeedCommentList(postId: widget.postId),
+                          
+                       CitizenFeedCommentBottom(
+                        textEditingController: _controller,
+                        postId: widget.postId
+                        ),
+                          
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
