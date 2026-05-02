@@ -17,7 +17,7 @@ class CitizenFeedCommentList extends StatelessWidget {
       child: BlocBuilder<CommentBloc, CommentState>(
         buildWhen: (previous, current) =>
             previous.postCommentLoadStatus != current.postCommentLoadStatus ||
-            previous.commentList != current.commentList,
+            previous.commentList.length != current.commentList.length,
         builder: (context, state) {
           if (state.postCommentLoadStatus == PostCommentLoadStatus.loading) {
             return Center(child: CustomLoading(color: theme.primaryColor));
@@ -55,7 +55,7 @@ class CitizenFeedCommentList extends StatelessWidget {
                   duration: const Duration(milliseconds: 300),
                   child: CitizenFeedCommentItem(
                     postId: postId,
-                    report: state.commentList[index],
+                    commentId: state.commentList[index].commentId!,
                   ),
                 ),
               );

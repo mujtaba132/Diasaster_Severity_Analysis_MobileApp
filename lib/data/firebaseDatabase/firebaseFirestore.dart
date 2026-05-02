@@ -98,8 +98,15 @@ class FirestoreService {
     required String mainCollection,
     required String mainDocId,
     required String subCollection,
+    String? orderBy,
+    bool? isDescending,
   }) {
-    return _db.collection(mainCollection).doc(mainDocId).
+
+    return 
+        orderBy!=null || orderBy!.isEmpty?
+        _db.collection(mainCollection).doc(mainDocId).
+        collection(subCollection).orderBy(orderBy,descending: isDescending!).snapshots():
+       _db.collection(mainCollection).doc(mainDocId).
         collection(subCollection).snapshots();
   }
 

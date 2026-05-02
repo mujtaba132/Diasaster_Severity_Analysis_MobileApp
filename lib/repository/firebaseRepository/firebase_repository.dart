@@ -168,13 +168,17 @@ class FirebaseRepository {
           required String mainCollection,
           required String mainDoc,
           required String subCollection,
+          String? orderBy,
+          bool? isDescending,
        })
        {
               try{
                   return  _firestoreService.listenToSubCollection(
                     mainCollection: mainCollection,
                     mainDocId: mainDoc,
-                    subCollection: subCollection
+                    subCollection: subCollection,
+                    orderBy: orderBy,
+                    isDescending: isDescending,
                   ).map((event) { 
                          return event.docs; 
                     });                  

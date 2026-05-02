@@ -13,6 +13,7 @@ class CitizenFeedCommentHeader extends StatelessWidget {
         return state.commentList.length;
       },
       builder: (context, totalComments) {
+        
         String comments = 
         totalComments == 0 ? 'No Comments':
         totalComments == 1 ? '01 Comment':

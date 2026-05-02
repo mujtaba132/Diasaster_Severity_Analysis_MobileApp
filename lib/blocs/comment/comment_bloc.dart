@@ -32,7 +32,9 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
             firebaseRepository.listenToSubCollectionData(
               mainCollection: 'UsersMedia', 
               mainDoc: event.postId, 
-              subCollection: 'Comments'),
+              subCollection: 'Comments',
+              orderBy: 'time_stamp',
+              isDescending: true),
             onData: (data) {
                 
                 List<CommentModel> postCommemts = data.map(
@@ -115,10 +117,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
 
          await firebaseRepository.updateData(
            path:"UsersMedia/${event.postId}/Comments/${event.commentId}",
-           data: updateData).onError((error, stackTrace){
-           print(error);
-           print(stackTrace);
-         },);
+           data: updateData);
   }
 
 }
