@@ -9,6 +9,8 @@ class FileImages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    print("I am here in Images of File Imagea----------${file.path}");
     return 
     file.path.isEmpty?
     Image.file(

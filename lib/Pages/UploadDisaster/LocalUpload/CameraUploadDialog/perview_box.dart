@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fyp_project/blocs/camera/camera_bloc.dart';
+import 'package:fyp_project/blocs/local_severity/local_severity_bloc.dart';
 import 'package:fyp_project/config/Components/CustomSnackbar.dart';
 import 'package:fyp_project/config/Components/Custom_UploadTile.dart';
 import 'package:fyp_project/config/routes/routes_arguments/imagePreview_arguments.dart';
@@ -16,7 +16,7 @@ class PerviewBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<CameraBloc, CamerasState>(
+    return BlocListener<LocalSeverityBloc, LocalSeverityState>(
       listenWhen: (previous, current) => previous.mediaUploadStatus != current.mediaUploadStatus,
       listener: (context, state) {
             if(state.mediaUploadStatus == MediaUploadStatus.error)
@@ -27,7 +27,7 @@ class PerviewBox extends StatelessWidget {
               return CustomSnackBar.success('Data Uploaded Successfully');
             }
       },
-      child: BlocBuilder<CameraBloc, CamerasState>(
+      child: BlocBuilder<LocalSeverityBloc, LocalSeverityState>(
         buildWhen: (previous, current) => previous.mediaUploadStatus != current.mediaUploadStatus,
         builder: (context, state) {
           return UploadTile(
@@ -37,7 +37,7 @@ class PerviewBox extends StatelessWidget {
               state.mediaUploadStatus == MediaUploadStatus.success ?
               UploadStatus.success: UploadStatus.initial,
               onUpload: () {
-                  context.read<CameraBloc>().add(OnUploadMediaEvent(filePath: file.path));
+                  context.read<LocalSeverityBloc>().add(OnUploadMediaEvent(file: file));
               },
               onPreview: () {
                   file.path.endsWith('.mp4') || file.path.endsWith('.mov')

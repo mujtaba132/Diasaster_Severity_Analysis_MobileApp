@@ -19,6 +19,17 @@ class OnCaptureMediaEvent extends CameraEvent {
 
 class OnPickedMediaEvent extends CameraEvent {}
 
+class OnGetCurrentLocationEvent extends CameraEvent {}
+
+class OnLoadPredictModelEvent extends CameraEvent{}
+
+class OnStoreDataLocallyEvent extends CameraEvent {
+       final File file;
+    const OnStoreDataLocallyEvent({required this.file});
+
+    @override
+    List<Object?> get props => [file];
+}
 
 class OnUploadMediaEvent extends CameraEvent {
     final String filePath;

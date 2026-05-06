@@ -8,6 +8,8 @@ import 'package:fyp_project/Providers/BottomNavBar/BottomNavBar.dart';
 import 'package:fyp_project/Providers/Citizen/DataUploadProvider.dart';
 import 'package:fyp_project/blocs/camera/camera_bloc.dart';
 import 'package:fyp_project/blocs/comment/comment_bloc.dart';
+import 'package:fyp_project/blocs/donation/donation_bloc.dart';
+import 'package:fyp_project/blocs/local_severity/local_severity_bloc.dart';
 import 'package:fyp_project/blocs/login/login_bloc.dart';
 import 'package:fyp_project/blocs/register_ngo/register_ngo_bloc.dart';
 import 'package:fyp_project/blocs/request_ngo/request_ngo_bloc.dart';
@@ -23,7 +25,9 @@ import 'package:fyp_project/repository/media_repository/submit_media_repository.
 import 'package:fyp_project/repository/firebaseRepository/firebase_repository.dart';
 import 'package:fyp_project/repository/media_repository/pickMediaRepository.dart';
 import 'package:fyp_project/repository/auth_repository/signUpRepository.dart';
-import 'package:fyp_project/repository/media_repository/uploadMediaRepository.dart';
+import 'package:fyp_project/repository/media_repository/mediaLocationRepository.dart';
+import 'package:fyp_project/repository/model_predict_repository/model_predict_repository.dart';
+import 'package:fyp_project/repository/sqlLite_media_repository/sqllite_media_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -63,7 +67,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       scaffoldMessengerKey: AppKeys.scaffoldMessengerKey,
       onGenerateRoute: Routes.generateRoutes,
-      initialRoute: RoutesName.splashScreen,
+      initialRoute: RoutesName.homeScreen,
     );
   }
 }
@@ -88,21 +92,39 @@ void serviceloader()
     getit.registerLazySingleton<FirebaseRepository>(() => FirebaseRepository());
     getit.registerFactory<RegisterNgoBloc>(() =>  RegisterNgoBloc(
         getit<Cloudinaryrepository>(), 
-        getit<FirebaseRepository>()));
+        getit<FirebaseRepository>(),
+        getit<CurrentUserRepository>()));
         
 
     getit.registerLazySingleton<PickMediaRepository>(() => PickMediaRepository());
-    getit.registerLazySingleton<UploadMediaRepository>(() => UploadMediaRepository());
+    getit.registerLazySingleton<MediaLocationRepository>(() => MediaLocationRepository());
     getit.registerLazySingleton<SubmitMediaRepository>(() => SubmitMediaRepository());
+    getit.registerLazySingleton<SQLLiteMediaRepository>(() => SQLLiteMediaRepository());
+    getit.registerLazySingleton<ModelPredictRepository>(() => ModelPredictRepository());
     getit.registerFactory<CameraBloc>(() =>  CameraBloc(
       getit<PickMediaRepository>(), 
-      getit<UploadMediaRepository>(),
-      getit<Cloudinaryrepository>(),
-      getit<FirebaseRepository>(),
-      getit<SubmitMediaRepository>()));
+      getit<MediaLocationRepository>(),
+      getit<SQLLiteMediaRepository>(),
+      getit<ModelPredictRepository>(),));
 
    getit.registerLazySingleton<CurrentUserRepository>(() => CurrentUserRepository());
    getit.registerFactory<CommentBloc>(() => CommentBloc(
            getit<FirebaseRepository>(), 
            getit<CurrentUserRepository>()));
+
+  
+   getit.registerFactory<LocalSeverityBloc>(() => LocalSeverityBloc(
+      getit<SQLLiteMediaRepository>(),
+      getit<Cloudinaryrepository>(),
+      getit<FirebaseRepository>(),
+      getit<CurrentUserRepository>(),
+   ));
+
+
+      getit.registerFactory<DonationBloc>(() => DonationBloc(
+       getit<FirebaseRepository>(),
+       getit<CurrentUserRepository>(),
+   ));
+  
+
 }

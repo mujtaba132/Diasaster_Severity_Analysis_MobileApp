@@ -78,6 +78,17 @@ class FirestoreService {
     return _db.collection(collectionPath).where(key , isEqualTo: query).snapshots();
   }
    
+   
+  Stream<QuerySnapshot> multiSearchDocsFromCollection({
+    required String collectionPath,
+    required String key,
+    required bool query,
+    required String key2,
+    required String query2,
+  }) {
+    return _db.collection(collectionPath).where(key , isEqualTo: query).
+    where(key2,isEqualTo:query2).snapshots();
+  }
 
     Future<void> addSubCollectionData({
     required String mainCollection,

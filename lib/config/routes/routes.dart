@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_project/config/Components/MediaComponents/ImagePreview/imagePreview_screen.dart';
-import 'package:fyp_project/config/Components/MediaComponents/VideoPreview/videoPreview_screen.dart';
-import 'package:fyp_project/config/routes/routes_arguments/NGOsdetail_screen_arguments.dart';
-import 'package:fyp_project/config/routes/routes_arguments/imagePreview_arguments.dart';
-import 'package:fyp_project/config/routes/routes_arguments/videoPreview_arguments.dart';
 import 'package:fyp_project/config/routes/routes_name.dart';
 import 'package:fyp_project/services/urls.dart';
 
@@ -45,7 +40,15 @@ class Routes {
           case RoutesName.videoPreviewScreen:
              final args = settings.arguments as VideoPreviewArguments;
              return MaterialPageRoute(builder: (_) => VideoPreviewScreen(filePath: args.file,isNetworkVideo: args.isNetworkVideo));
-             
+          case RoutesName.cameraScreen:
+             return MaterialPageRoute(builder: (_) => CameraScreen());
+
+
+        // Upload Module
+          case RoutesName.localUploadScreen:
+             return MaterialPageRoute(builder: (_) => LocalUploadScreen());
+
+
          //default case
          default:
              return MaterialPageRoute(builder: (_) => Scaffold(body: Center(child: Text("No Route Found!!"))));

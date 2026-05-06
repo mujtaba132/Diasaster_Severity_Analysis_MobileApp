@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 
-class UploadMediaRepository {
+class MediaLocationRepository {
    
      final PermissionService _permissionService =  PermissionService();
 

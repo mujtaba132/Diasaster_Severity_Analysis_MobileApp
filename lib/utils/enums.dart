@@ -32,3 +32,8 @@ enum AdminFeedPostStatus {all,pending,processing,approved}
 enum VideoInitializingStatus {initail,loading,success,error}
 
 enum PostCommentLoadStatus {initail,loading,success,error}
+
+enum LocalSeverityStatus{initail,loading,success,error}
+
+enum VerifiedNGOsDonationStatus{initail,loading,success,error}
+enum DonationStatus{initail,loading,success,error}

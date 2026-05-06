@@ -1,25 +1,31 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fyp_project/Pages/Camera/CameraUploadDialog/buttons/cancelBtn.dart';
-import 'package:fyp_project/Pages/Camera/CameraUploadDialog/buttons/uploadBtn.dart';
-import 'package:fyp_project/Pages/Camera/CameraUploadDialog/container_icon.dart';
-import 'package:fyp_project/Pages/Camera/CameraUploadDialog/perview_box.dart';
-import 'package:fyp_project/Pages/Camera/CameraUploadDialog/title_description.dart';
-import 'package:fyp_project/blocs/camera/camera_bloc.dart';
+import 'package:fyp_project/Model/mediaModel/media_model.dart';
+import 'package:fyp_project/Pages/UploadDisaster/LocalUpload/CameraUploadDialog/buttons/cancelBtn.dart';
+import 'package:fyp_project/Pages/UploadDisaster/LocalUpload/CameraUploadDialog/buttons/uploadBtn.dart';
+import 'package:fyp_project/Pages/UploadDisaster/LocalUpload/CameraUploadDialog/container_icon.dart';
+import 'package:fyp_project/Pages/UploadDisaster/LocalUpload/CameraUploadDialog/perview_box.dart';
+import 'package:fyp_project/Pages/UploadDisaster/LocalUpload/CameraUploadDialog/title_description.dart';
+import 'package:fyp_project/blocs/local_severity/local_severity_bloc.dart';
 import 'package:fyp_project/main.dart';
 
-void showUploadDialog({required BuildContext context, required File file}) {
+void showUploadDialog({
+  required BuildContext context, 
+  required MediaModel model}) {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (_) => UploadDialog(uploadFile: file),
+    builder: (_) => 
+    UploadDialog(model: model),
   );
 }
 
 class UploadDialog extends StatefulWidget {
-  final File uploadFile;
-  const UploadDialog({super.key, required this.uploadFile});
+
+  final MediaModel model;
+
+  const UploadDialog({super.key, required this.model});
 
   @override
   State<UploadDialog> createState() => _UploadDialogState();
@@ -27,7 +33,7 @@ class UploadDialog extends StatefulWidget {
 
 class _UploadDialogState extends State<UploadDialog>
     with SingleTickerProviderStateMixin {
-  late CameraBloc _cameraBloc;
+  late LocalSeverityBloc _localSeverityBloc;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -35,7 +41,7 @@ class _UploadDialogState extends State<UploadDialog>
   void initState() {
     super.initState();
 
-    _cameraBloc = getit<CameraBloc>();
+    _localSeverityBloc = getit<LocalSeverityBloc>();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -59,7 +65,7 @@ class _UploadDialogState extends State<UploadDialog>
   @override
   void dispose() {
     _controller.dispose();
-    _cameraBloc.close();
+    _localSeverityBloc.close();
     super.dispose();
   }
 
@@ -68,7 +74,7 @@ class _UploadDialogState extends State<UploadDialog>
     final theme = Theme.of(context);
 
     return BlocProvider.value(
-      value: _cameraBloc,
+      value: _localSeverityBloc,
       child: Dialog(
         backgroundColor: Colors.transparent,
         child: ScaleTransition(
@@ -85,12 +91,15 @@ class _UploadDialogState extends State<UploadDialog>
                 ContainerIcon(),
 
                 const SizedBox(height: 16),
-
-                TitleDescription(),
+                
+                TitleDescription(
+                  title: 'Upload File',
+                  description: 'Upload your image or video here. \n Make sure the file is clear and valid.',
+                ),
 
                 const SizedBox(height: 20),
 
-                PerviewBox(file: widget.uploadFile),
+                PerviewBox(file: File(widget.model.mediaUrl!)),
 
                 const SizedBox(height: 20),
 
@@ -100,7 +109,7 @@ class _UploadDialogState extends State<UploadDialog>
 
                     const SizedBox(width: 12),
 
-                    UploadBtn(filePath: widget.uploadFile.path,onPressed:  _closeDialog),
+                    UploadBtn(model: widget.model,onPressed:  _closeDialog),
                   ],
                 ),
               ],

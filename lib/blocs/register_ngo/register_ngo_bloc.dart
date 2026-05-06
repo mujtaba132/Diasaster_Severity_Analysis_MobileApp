@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fyp_project/Model/NGOModel/ngo_model.dart';
 import 'package:fyp_project/repository/cloudinary_repository/cloudinaryRepository.dart';
+import 'package:fyp_project/repository/current_user_repository/current_user_repository.dart';
 import 'package:fyp_project/repository/firebaseRepository/firebase_repository.dart';
 import 'package:fyp_project/utils/enums.dart';
 
@@ -13,7 +14,11 @@ class RegisterNgoBloc extends Bloc<RegisterNgoEvent, RegisterNgoState> {
 
   late Cloudinaryrepository cloudinaryrepository;
   late FirebaseRepository firebaserepository;
-  RegisterNgoBloc(this.cloudinaryrepository,this.firebaserepository) : super(RegisterNgoState()) {
+  late CurrentUserRepository currentUserRepository;
+  RegisterNgoBloc(
+    this.cloudinaryrepository,
+    this.firebaserepository,
+    this.currentUserRepository) : super(RegisterNgoState()) {
     on<OnChangedNameEvent>(_onChangeName);
     on<OnChangedAddressEvent>(_onChangeAddress);
     on<OnChangedPhoneNoEvent>(_onChangePhoneNo);
@@ -67,7 +72,7 @@ try {
 
   result = await FilePicker.platform.pickFiles(
     type: FileType.custom,
-    allowedExtensions: ['jpg', 'png'],
+    allowedExtensions: ['jpg', 'png','jpeg'],
   );
 } 
 catch (error) {
@@ -79,13 +84,13 @@ if (result != null && result.files.single.path != null) {
 
   final extension = result.files.single.extension?.toLowerCase();
 
-  if (extension != null && ['jpg', 'png'].contains(extension)) {
+  if (extension != null && ['jpg', 'png','jpeg'].contains(extension)) {
     final fileName = result.files.single.name; 
     final filePath = result.files.single.path!;
 
     emit(state.copyWith(newUploadCertificateStatus: UploadCertificateStatus.initail,newCertificateFile: filePath,newFileName: fileName));
   } else {
-    emit(state.copyWith(newUploadCertificateStatus: UploadCertificateStatus.error,newError: "Only JPG, PNG allowed"));
+    emit(state.copyWith(newUploadCertificateStatus: UploadCertificateStatus.error,newError: "Only JPG, PNG, JPEG allowed"));
   }
 }
   }
@@ -117,6 +122,7 @@ if (result != null && result.files.single.path != null) {
         emit(state.copyWith(newSubmitNGOsStatus: SubmitRegisterNGOsStatus.loading));
 
         NGOModel newNGO = NGOModel(
+          userId: currentUserRepository.userId(),
           ngoName: state.name,
           address: state.address,
           phoneNo: state.phoneNo,

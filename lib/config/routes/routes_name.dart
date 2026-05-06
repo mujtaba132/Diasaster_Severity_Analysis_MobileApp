@@ -15,8 +15,14 @@ class RoutesName {
    static const String detailNGOScreen ='detailNGO_screen';  
 
 
-   //Camera Module   
+   //Camera Module 
+   static const String cameraScreen = 'camera_screen';  
    static const String imagePreviewScreen = 'imagePreview_screen';     
-   static const String videoPreviewScreen = 'videoPreview_screen';                                 
+   static const String videoPreviewScreen = 'videoPreview_screen'; 
+
+
+   //Upload Module
+    static const String localUploadScreen = 'localUpload_screen'; 
+                                   
 
 }

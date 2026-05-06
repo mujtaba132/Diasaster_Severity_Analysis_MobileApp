@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fyp_project/ai_model/disaster_classifier.dart';
+import 'package:fyp_project/ai_model/predict_media.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TestModelPage extends StatefulWidget {
@@ -12,7 +12,7 @@ class TestModelPage extends StatefulWidget {
 
 class _TestModelPageState extends State<TestModelPage> {
   final ImagePicker _picker = ImagePicker();
-  final DisasterClassifier _classifier = DisasterClassifier();
+  final ModelPredict _classifier = ModelPredict();
 
   File? _image;
   String _result = "No result";
@@ -32,7 +32,7 @@ class _TestModelPageState extends State<TestModelPage> {
 
   // ================= PICK IMAGE =================
   Future<void> pickImage() async {
-    final XFile? picked = await _picker.pickImage(
+    final XFile? picked = await _picker.pickVideo(
       source: ImageSource.gallery,
     );
 
@@ -52,13 +52,20 @@ class _TestModelPageState extends State<TestModelPage> {
   Future<void> runModel() async {
     if (_image == null) return;
 
-    final output = _classifier.predict(_image!);
-
+   try{
+     final output = await _classifier.predictVideo(_image!.path);
+    print(output);
     setState(() {
       _result = output["class"];
       _confidence = "${output["confidence"]}%";
       _isLoading = false;
-    });
+    });}
+   catch(e){
+       print(e);
+       throw Exception(e);
+   }
+
+   
   }
 
   // ================= UI =================

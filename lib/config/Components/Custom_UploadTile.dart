@@ -4,14 +4,14 @@ enum UploadStatus { initial, loading, success, error }
 
 class UploadTile extends StatelessWidget {
   final String fileName;
-  final UploadStatus status;
+  final UploadStatus? status;
   final VoidCallback? onUpload;
   final VoidCallback? onPreview;
 
   const UploadTile({
     super.key,
     required this.fileName,
-    required this.status,
+    this.status = UploadStatus.success,
     this.onUpload,
     this.onPreview,
   });
@@ -25,7 +25,9 @@ class UploadTile extends StatelessWidget {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      padding: const EdgeInsets.all(14),
+      padding: isLoading?
+       const EdgeInsets.all(15):
+       const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: isSuccess
             ? Colors.green.withOpacity(0.1)
@@ -39,7 +41,8 @@ class UploadTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          ///  Icon
+
+          //  Icon
           Icon(
             isSuccess ? Icons.check_circle : Icons.upload_file,
             color: isSuccess
@@ -49,7 +52,7 @@ class UploadTile extends StatelessWidget {
 
           const SizedBox(width: 10),
 
-          /// File Name / Placeholder
+          // File Name / Placeholder
           Expanded(
             child: Text(
               fileName.isNotEmpty
@@ -61,7 +64,7 @@ class UploadTile extends StatelessWidget {
             ),
           ),
 
-          /// Loading
+          // Loading
           if (isLoading)
             SizedBox(
               height: 20,
@@ -72,15 +75,15 @@ class UploadTile extends StatelessWidget {
               ),
             ),
 
-          ///  Upload Button
+          // Upload Button
           if (!isLoading && !isSuccess && fileName.isNotEmpty)
             IconButton(
               onPressed: onUpload,
               icon: const Icon(Icons.file_upload_outlined),
             ),
 
-          ///  Preview Button
-          if (!isLoading && !isSuccess && fileName.isNotEmpty)
+          //  Preview Button
+          if (!isLoading && fileName.isNotEmpty)
             IconButton(
               onPressed: onPreview,
               icon: const Icon(Icons.remove_red_eye),

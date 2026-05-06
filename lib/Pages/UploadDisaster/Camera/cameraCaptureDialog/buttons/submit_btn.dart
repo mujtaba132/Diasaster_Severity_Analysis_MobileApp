@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fyp_project/blocs/camera/camera_bloc.dart';
@@ -5,10 +7,10 @@ import 'package:fyp_project/config/Components/CustomSnackbar.dart';
 import 'package:fyp_project/config/Components/Custom_Btns.dart';
 import 'package:fyp_project/utils/enums.dart';
 
-class UploadBtn extends StatelessWidget {
+class SubmitBtn extends StatelessWidget {
   final String filePath;
   final VoidCallback onPressed;
-  const UploadBtn({super.key,required this.filePath,required this.onPressed});
+  const SubmitBtn({super.key,required this.filePath,required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +37,11 @@ class UploadBtn extends StatelessWidget {
               textColor: theme.cardColor,
               height: 43,
               width: double.infinity,
-              isLoading: state.submitRequestStatus ==SubmitRequestStatus.loading,
-              text: 'Upload',
+              isLoading: state.submitRequestStatus == SubmitRequestStatus.loading, 
+              text: 'Get Severity',
               onclick:
               () {
-                context.read<CameraBloc>().add(OnSubmitRequestEvent(filePath: filePath));
+                context.read<CameraBloc>().add(OnStoreDataLocallyEvent(file: File(filePath)));
                }
             ),
           );

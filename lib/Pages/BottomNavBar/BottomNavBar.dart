@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_project/Pages/Camera/camera_screen.dart';
+import 'package:fyp_project/Pages/Authentication/SignIn/signIn_screen.dart';
+import 'package:fyp_project/Pages/Donation/disaster_donation.dart';
+import 'package:fyp_project/Pages/NGOs/NGOsVerified/verifiedNGOs_screen.dart';
+import 'package:fyp_project/Pages/NGOs/NGOsVerify/NGOsRequests/requestListNGOs_screen.dart';
+import 'package:fyp_project/Pages/UploadDisaster/LocalUpload/LocalUploadScreen/localUpload_screen.dart';
 import 'package:fyp_project/Pages/feed/admin/admin_feed_screen.dart';
 import 'package:fyp_project/Pages/feed/citizen/citizen_feed_screen.dart';
+import 'package:fyp_project/Pages/feed/user/user_feed_screen.dart';
 import 'package:fyp_project/Providers/BottomNavBar/BottomNavBar.dart';
 import 'package:fyp_project/testModel/test_model.dart';
 import 'package:provider/provider.dart';
@@ -15,13 +20,19 @@ class HomeScreen extends StatelessWidget {
     final navProvider = Provider.of<BottomNavProvider>(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final pages = [
-      CameraScreen(),
-      CitizenFeedListScreen(),
-      AdminFeedScreen(),
-      TestModelPage()
-    ];
+    // final pages = [
+    //   LocalUploadScreen(),
+    //   CitizenFeedListScreen(),
+    //   AdminFeedScreen(),
+    //    SigninScreen(),
+    // ]; 
 
+    final pages = [
+      LocalUploadScreen(),
+      NGORequestListScreen(), 
+      VerifiedNGOsListScreen(),
+      DonationScreen()
+    ];
     return SafeArea(
       child: Scaffold(
         body: pages[navProvider.currentIndex],

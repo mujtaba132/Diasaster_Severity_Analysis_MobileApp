@@ -8,6 +8,8 @@ abstract class NGOModel with _$NGOModel{
      
      const factory NGOModel({
            @Default('') String? id,
+           @Default(false) bool? isSelected,
+           @Default('') @JsonKey(name: 'userId') String? userId,
            @Default('') @JsonKey(name: 'ngoName') String? ngoName,
            @Default('') @JsonKey(name: 'address') String? address,
            @Default('') @JsonKey(name: 'phoneNo') String? phoneNo,
@@ -18,8 +20,7 @@ abstract class NGOModel with _$NGOModel{
      }) =_NGOModel;
 
      factory NGOModel.fromJson(Map<String,dynamic> map) => _$NGOModelFromJson(map);
-           @override
-           Map<String,dynamic> toJson() => _$NGOModelToJson(_NGOModel()); 
+
      factory NGOModel.fromFirebase(Map<String,dynamic> map,String id) {
         return NGOModel.fromJson(map).copyWith(id: id);
      }

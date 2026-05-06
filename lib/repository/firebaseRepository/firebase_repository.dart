@@ -136,6 +136,31 @@ class FirebaseRepository {
        }
 
 
+        Stream<List<QueryDocumentSnapshot>> multiSearchDocFromCollection({
+          required String path,
+          required String key,
+          required bool query,
+          required String key2,
+          required String query2
+        })
+       {
+              try{
+                  return  _firestoreService.multiSearchDocsFromCollection
+                  (collectionPath: path,key: key,query: query,key2: key2, query2: query2)
+                  .map((event) { 
+                       return event.docs; 
+                    });                  
+              } on SocketException {
+                  throw NoInternetException('');
+               } on TimeoutException {
+                  throw TimeoutException('');
+               } catch (error)
+               {
+                  throw GeneralException(error.toString());
+               }
+       }
+      
+
         Future<void> setSubCollectionData({
           required String mainCollection,
           required String mainDoc,

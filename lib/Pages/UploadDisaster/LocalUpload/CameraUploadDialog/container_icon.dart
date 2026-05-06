@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ContainerIcon extends StatelessWidget {
-  const ContainerIcon({super.key});
+
+  final IconData? icon;
+  const ContainerIcon({super.key,this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,7 @@ class ContainerIcon extends StatelessWidget {
                   color: theme.primaryColor.withOpacity(0.1),
                 ),
                 child: Icon(
-                  Icons.upload_file,
+                  icon ?? Icons.upload_file,
                   size: 40,
                   color: theme.primaryColor,
                 ),

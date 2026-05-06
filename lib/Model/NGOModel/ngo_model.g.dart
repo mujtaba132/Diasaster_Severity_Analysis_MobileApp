@@ -8,6 +8,8 @@ part of 'ngo_model.dart';
 
 _NGOModel _$NGOModelFromJson(Map<String, dynamic> json) => _NGOModel(
   id: json['id'] as String? ?? '',
+  isSelected: json['isSelected'] as bool? ?? false,
+  userId: json['userId'] as String? ?? '',
   ngoName: json['ngoName'] as String? ?? '',
   address: json['address'] as String? ?? '',
   phoneNo: json['phoneNo'] as String? ?? '',
@@ -19,6 +21,8 @@ _NGOModel _$NGOModelFromJson(Map<String, dynamic> json) => _NGOModel(
 
 Map<String, dynamic> _$NGOModelToJson(_NGOModel instance) => <String, dynamic>{
   'id': instance.id,
+  'isSelected': instance.isSelected,
+  'userId': instance.userId,
   'ngoName': instance.ngoName,
   'address': instance.address,
   'phoneNo': instance.phoneNo,

@@ -2,18 +2,15 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp_project/Model/mediaModel/media_model.dart';
-import 'package:fyp_project/repository/cloudinary_repository/cloudinaryRepository.dart';
-import 'package:fyp_project/repository/media_repository/submit_media_repository.dart';
-import 'package:fyp_project/repository/firebaseRepository/firebase_repository.dart';
 import 'package:fyp_project/repository/media_repository/pickMediaRepository.dart';
-import 'package:fyp_project/repository/media_repository/uploadMediaRepository.dart';
+import 'package:fyp_project/repository/media_repository/mediaLocationRepository.dart';
+import 'package:fyp_project/repository/model_predict_repository/model_predict_repository.dart';
+import 'package:fyp_project/repository/sqlLite_media_repository/sqllite_media_repository.dart';
 import 'package:fyp_project/utils/enums.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 part 'camera_event.dart';
 part 'camera_state.dart';
@@ -24,24 +21,26 @@ class CameraBloc extends Bloc<CameraEvent, CamerasState> {
   final uuid = Uuid();
 
   PickMediaRepository pickMediaRepository;
-  UploadMediaRepository uploadMediaRepository;
-  Cloudinaryrepository cloudinaryrepository;
-  FirebaseRepository firebaseRepository;
-  SubmitMediaRepository submitMediaRepository;
+  MediaLocationRepository locationMediaRepository;
+  SQLLiteMediaRepository sqlLiteMediaRepository;
+  ModelPredictRepository modelPredictRepository;
 
   CameraBloc(
     this.pickMediaRepository,
-    this.uploadMediaRepository,
-    this.cloudinaryrepository,
-    this.firebaseRepository,
-    this.submitMediaRepository):
+    this.locationMediaRepository,
+    this.sqlLiteMediaRepository,
+    this.modelPredictRepository):
     super(CamerasState()) {
     on<OnCaptureMediaEvent>(_onCaptureMedia);
     on<OnPickedMediaEvent>(_onPickMedia);
-    on<OnUploadMediaEvent>(_onUploadMedia);
-    on<OnSubmitRequestEvent>(_onSubmitRequest);
+    on<OnStoreDataLocallyEvent>(_onSaveDataLocally);
+    on<OnLoadPredictModelEvent>(_onLoadPredictModel);
   }
 
+   void _onLoadPredictModel(OnLoadPredictModelEvent event,Emitter<CamerasState> emit) async{
+        
+        await modelPredictRepository.loadModel();
+   }
 
    void _onCaptureMedia(OnCaptureMediaEvent event,Emitter<CamerasState> emit)
    {
@@ -75,73 +74,50 @@ class CameraBloc extends Bloc<CameraEvent, CamerasState> {
 
    }
 
-   void _onUploadMedia(OnUploadMediaEvent event,Emitter<CamerasState> emit) async{
-
-        emit(state.copyWith(newError: '',newMediaUploadStatus: MediaUploadStatus.loading));
-
-       try{
-           String? uploadMediaUri;
-           String? uploadThumbnail;
-           Position position = await uploadMediaRepository.getCurrentLocation();
-           String address = await uploadMediaRepository.getAddress(position: position);           
-           emit(state.copyWith(newAddress: address)); 
-
-           String filePath = event.filePath;
-           if(filePath.endsWith('mp4') || filePath.endsWith('mov')) {
-
-              String? videoThumbnail = await VideoThumbnail.thumbnailFile(video: filePath);
-              uploadThumbnail = await cloudinaryrepository.uploadCloudinaryImage(filePath: videoThumbnail!);
-              uploadMediaUri = await cloudinaryrepository.uploadCloudinaryVideo(filePath: filePath);
-
-              emit(state.copyWith(newVideoThumnail: uploadThumbnail));
-
-           } else {
-              uploadMediaUri = await cloudinaryrepository.uploadCloudinaryImage(filePath: filePath);
-           }
-           
-            emit(state.copyWith(newCaptureFile: File(uploadMediaUri!),newMediaUploadStatus: MediaUploadStatus.success)); 
-
-       } catch (error){
-              emit(state.copyWith(newError: error.toString(),newMediaUploadStatus: MediaUploadStatus.error)); 
-       }
+   void _onSaveDataLocally(OnStoreDataLocallyEvent event,Emitter<CamerasState> emit) async{
         
-   }
-
-
-   void _onSubmitRequest(OnSubmitRequestEvent event,Emitter<CamerasState> emit) async{
-
-       if(state.captureFile == null)  
+      if(event.file.path.isEmpty)  
        {
-        emit(state.copyWith(newError: 'Upload file before submit.',newSubmitRequestStatus: SubmitRequestStatus.error));
+        emit(state.copyWith(newError: 'Select file before get severity.',newSubmitRequestStatus: SubmitRequestStatus.error));
         return;
        }
        emit(state.copyWith(newError: '',newSubmitRequestStatus: SubmitRequestStatus.loading));
-       
-       try{
+         final filePath = event.file.path;
+          Map<String,dynamic> map;
 
-            MediaModel mediaModel = await submitMediaRepository.getMediaSeverity(filePath: event.filePath);
-            String currentDateTime = DateFormat("dd MMM yyyy 'At' hh:mm a").format(DateTime.now());
-            User currentUser = FirebaseAuth.instance.currentUser!;
-            String userName = currentUser.displayName==null ? 
-             currentUser.email!.split('@').first:currentUser.displayName!;
+        try{
+             Position position = await locationMediaRepository.getCurrentLocation();
+             String address = await locationMediaRepository.getAddress(position: position);  
 
-            MediaModel updatedModel = mediaModel.copyWith(
+             String mediaPath = await sqlLiteMediaRepository.storeFile(event.file);  
+
+             String currentDateTime = DateFormat("dd MMM yyyy 'At' hh:mm a").format(DateTime.now()); 
+
+             if(filePath.endsWith('mp4') || filePath.endsWith('mov'))
+             {  
+               map = await modelPredictRepository.predictVideo(File(filePath));
+             } else {
+               map = modelPredictRepository.predictImage(File(filePath));
+             }  
+                       
+
+             final model = MediaModel(
               reportId: uuid.v4(),
-              userName: userName,
-              userToken: currentUser.uid,
-              userProfileUrl: currentUser.photoURL ?? "",
-              location: state.address,
-              mediaUrl: state.captureFile!.path,
+              location: address,
+              disasterType: map['class'],
+              severity: double.tryParse(map['confidence']),
+              mediaUrl: mediaPath,
               timeStamp: currentDateTime,
-              videoThumbnail: state.videoThumbnail);
- 
+              status: CitizenFeedStatus.pending, 
+             ); 
+          
+             await sqlLiteMediaRepository.insertData(model);  
+             emit(state.copyWith(newSubmitRequestStatus: SubmitRequestStatus.success));
 
-            await firebaseRepository.setData(collectionPath: "UsersMedia",docpath: updatedModel.reportId!, data : updatedModel.toJson());
-            emit(state.copyWith(newSubmitRequestStatus: SubmitRequestStatus.success));
+        } catch (e){ 
+           emit(state.copyWith(newError: e.toString(),newSubmitRequestStatus: SubmitRequestStatus.error)); 
+        }
 
-       } catch (error){
-           emit(state.copyWith(newError: error.toString(),newSubmitRequestStatus: SubmitRequestStatus.error));
-       }
 
    }
-}
+   }
