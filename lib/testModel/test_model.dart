@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fyp_project/ai_model/predict_media.dart';
+import 'package:fyp_project/repository/payment_repository/stripe_payment_repository.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TestModelPage extends StatefulWidget {
@@ -13,6 +14,7 @@ class TestModelPage extends StatefulWidget {
 class _TestModelPageState extends State<TestModelPage> {
   final ImagePicker _picker = ImagePicker();
   final ModelPredict _classifier = ModelPredict();
+  final StripePaymentRepository stripePaymentRepository = StripePaymentRepository();
 
   File? _image;
   String _result = "No result";
@@ -64,9 +66,23 @@ class _TestModelPageState extends State<TestModelPage> {
        print(e);
        throw Exception(e);
    }
-
-   
   }
+
+   void showPaymentSheet() async{
+
+         await stripePaymentRepository.makeCardPayment(amount: '200.0', currency: 'pkr')
+         .then((isSuccess) {
+              !isSuccess?
+              print('error: please try again went something wrong!!'):
+              print('Successfully executed task of payment');  
+         })
+         .onError((error, stackTrace) {
+            print(error);
+            print(stackTrace); 
+         });
+   }
+   
+  
 
   // ================= UI =================
   @override
@@ -91,8 +107,8 @@ class _TestModelPageState extends State<TestModelPage> {
 
             // BUTTON
             ElevatedButton(
-              onPressed: pickImage,
-              child: const Text("Pick Image"),
+              onPressed: showPaymentSheet,
+              child: const Text("Make Payment"),
             ),
 
             const SizedBox(height: 30),

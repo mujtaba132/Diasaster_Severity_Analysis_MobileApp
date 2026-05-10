@@ -23,6 +23,7 @@ class RoutesName {
 
    //Upload Module
     static const String localUploadScreen = 'localUpload_screen'; 
-                                   
 
+  //Donation Module
+    static const String userDonationScreen= 'donation_history';   
 }

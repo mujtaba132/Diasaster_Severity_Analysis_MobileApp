@@ -9,7 +9,11 @@ sealed class DonationEvent extends Equatable{
   List<Object?> get props => [];
 }
 
-class OnLoadDonationNGOsEvent extends DonationEvent{}
+class OnLoadDonationNGOsEvent extends DonationEvent{
+    final String userId;
+
+    const OnLoadDonationNGOsEvent({required this.userId});
+}
 
 class OnUpdateIndexEvent extends DonationEvent{
      final String ngoId;
@@ -26,5 +30,17 @@ class OnChangeDonationAmountEvent extends DonationEvent{
      const OnChangeDonationAmountEvent({required this.amount});
      @override
      List<Object?> get props => [amount];
+}
+
+class OnDonateAmountEvent extends DonationEvent{}
+
+class OnCardPaymentEvent extends DonationEvent{
+    final String amount;
+    final String currency;
+
+    const OnCardPaymentEvent({required this.amount,required this.currency});
+    
+     @override
+     List<Object?> get props => [amount,currency];
 }
 

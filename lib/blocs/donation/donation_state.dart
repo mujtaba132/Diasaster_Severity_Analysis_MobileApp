@@ -9,6 +9,7 @@ class DonationState extends Equatable  {
   final Map<String?,dynamic> donationMap;
   final String selectedNgoId;
   final double donatedAmount;
+  final dynamic paymentIntent;
   final String error;
 
   const DonationState({
@@ -18,6 +19,7 @@ class DonationState extends Equatable  {
     this.donationMap = const {},
     this.selectedNgoId = '',
     this.donatedAmount = 0.0,
+    this.paymentIntent,
     this.error = ''
     });
 
@@ -29,6 +31,7 @@ class DonationState extends Equatable  {
       Map<String?,dynamic>? donationMap,
       String? selectedNgoId,
       double? donatedAmount,
+      dynamic paymentIntent,
       String? error,
   }){
       return DonationState(
@@ -38,6 +41,7 @@ class DonationState extends Equatable  {
         donationMap:  donationMap ?? this.donationMap,
         selectedNgoId: selectedNgoId ?? this.selectedNgoId,
         donatedAmount: donatedAmount ?? this.donatedAmount,
+        paymentIntent: paymentIntent ?? this.paymentIntent,
         error: error ?? this.error,
       );
   }

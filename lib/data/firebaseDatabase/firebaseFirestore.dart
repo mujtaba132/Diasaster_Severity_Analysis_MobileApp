@@ -53,8 +53,16 @@ class FirestoreService {
 
   Stream<QuerySnapshot> listenToCollection({
     required String collectionPath,
+    String? orderby,
   }) {
-    return _db.collection(collectionPath).snapshots();
+
+    if(orderby==null || orderby.isEmpty){
+      return _db.collection(collectionPath).snapshots();
+    } 
+    else{
+      return _db.collection(collectionPath).orderBy(orderby,descending: true).snapshots();
+    }
+    
   }
 
 
@@ -72,10 +80,11 @@ class FirestoreService {
 
   Stream<QuerySnapshot> searchDocsFromCollection({
     required String collectionPath,
+    String? orderBy,
     required String key,
     required String query,
   }) {
-    return _db.collection(collectionPath).where(key , isEqualTo: query).snapshots();
+    return _db.collection(collectionPath).where(key , isEqualTo: query).orderBy(orderBy!,descending : true).snapshots();
   }
    
    

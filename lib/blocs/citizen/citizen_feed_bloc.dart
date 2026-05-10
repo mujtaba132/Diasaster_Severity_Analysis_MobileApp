@@ -23,7 +23,7 @@ class CitizenFeedBloc extends Bloc<CitizenFeedEvent, CitizenFeedState> {
           emit(state.copyWith(newcitizenFeedStatus: CitizenFeedstatus.loading));
 
           await emit.forEach<List<QueryDocumentSnapshot>>(
-          firebaseRepository.searchDocFromCollection(path: "UsersMedia",key: "post_status",query: "approved"), 
+          firebaseRepository.searchDocFromCollection(path: "UsersMedia",key: "post_status",query: "approved",orderBy: 'time_stamp'), 
           onData: (docs) {
 
               final citizenFeed =  docs.map((doc) {
@@ -36,6 +36,8 @@ class CitizenFeedBloc extends Bloc<CitizenFeedEvent, CitizenFeedState> {
 
               return state.copyWith(newCitizenFeedList: citizenFeed,newSearchedFeedList: citizenFeed ,newCitizenFeedMap: citizenFeedMap,newcitizenFeedStatus: CitizenFeedstatus.success);
           }).onError((error, stackTrace) {
+                print(error);
+                print(stackTrace);
                 emit(state.copyWith(newError: error.toString(), newcitizenFeedStatus: CitizenFeedstatus.error)); 
           });
   }

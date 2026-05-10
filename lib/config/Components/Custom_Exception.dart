@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class CustomException extends StatefulWidget {
@@ -8,9 +9,9 @@ class CustomException extends StatefulWidget {
 
   const CustomException({
     super.key,
-    this.title='Something wrong',
+    this.title = 'Something went wrong',
     required this.message,
-    this.icon=Icons.error,
+    this.icon = Icons.error_outline_rounded,
     this.onRetry,
   });
 
@@ -21,8 +22,8 @@ class CustomException extends StatefulWidget {
 class _CustomExceptionState extends State<CustomException>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _fadeAnimation;
+  late Animation<double> _fade;
+  late Animation<double> _scale;
 
   @override
   void initState() {
@@ -30,14 +31,11 @@ class _CustomExceptionState extends State<CustomException>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 900),
     );
 
-    _scaleAnimation =
-        CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
-
-    _fadeAnimation =
-        CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _fade = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _scale = CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
 
     _controller.forward();
   }
@@ -50,73 +48,152 @@ class _CustomExceptionState extends State<CustomException>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Center(
       child: FadeTransition(
-        opacity: _fadeAnimation,
+        opacity: _fade,
         child: ScaleTransition(
-          scale: _scaleAnimation,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // 🔥 Animated Icon
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isDark
-                      ? Colors.white.withOpacity(0.1)
-                      : Colors.black.withOpacity(0.05),
-                ),
-                child: Icon(
-                  widget.icon,
-                  size: 60,
-                  color: isDark ? Colors.white70 : Colors.black54,
-                ),
+          scale: _scale,
+
+          child: Container(
+            margin: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 22,
+              vertical: 28,
+            ),
+
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(28),
+
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: isDark
+                    ? [
+                        const Color(0xff0F172A),
+                        const Color(0xff111827),
+                      ]
+                    : [
+                        Colors.white,
+                        const Color(0xffF8FAFC),
+                      ],
               ),
 
-              const SizedBox(height: 20),
-
-              // Title
-              Text(
-                widget.title,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black,
-                ),
+              border: Border.all(
+                color: Colors.grey.withOpacity(0.12),
               ),
 
-              const SizedBox(height: 8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(isDark ? 0.3 : 0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
 
-              // Message
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Text(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+
+                /// 🌟 ICON WITH GLOW
+                Container(
+                  padding: const EdgeInsets.all(18),
+
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [
+                        theme.primaryColor.withOpacity(0.4),
+                        theme.primaryColor.withOpacity(0.8),
+                      ],
+                    ),
+
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.secondaryHeaderColor.withOpacity(0.25),
+                        blurRadius: 20,
+                        spreadRadius: 2,
+                      )
+                    ],
+                  ),
+
+                  child: Icon(
+                    widget.icon,
+                    size: 42,
+                    color: Colors.white,
+                  ),
+                ),
+
+                const SizedBox(height: 18),
+
+                /// TITLE
+                Text(
+                  widget.title,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                /// MESSAGE
+                Text(
                   widget.message,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
-                    color: isDark ? Colors.white60 : Colors.black54,
+                    height: 1.5,
+                    color: isDark
+                        ? Colors.grey.shade400
+                        : Colors.grey.shade700,
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 22),
 
-              // Retry Button (optional)
-              if (widget.onRetry != null)
-                ElevatedButton(
-                  onPressed: widget.onRetry,
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                /// RETRY BUTTON
+                if (widget.onRetry != null)
+                  GestureDetector(
+                    onTap: widget.onRetry,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 26,
+                        vertical: 12,
+                      ),
+
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.blueAccent,
+                            Colors.purpleAccent,
+                          ],
+                        ),
+
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blue.withOpacity(0.25),
+                            blurRadius: 12,
+                          ),
+                        ],
+                      ),
+
+                      child: const Text(
+                        "Try Again",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
-                  child: const Text("Retry"),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

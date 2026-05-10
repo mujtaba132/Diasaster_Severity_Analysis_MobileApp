@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fyp_project/Pages/Donation/UserModule/DonationHistory/donation_history.dart';
+import 'package:fyp_project/config/routes/routes_arguments/userDonation_arguments.dart';
 import 'package:fyp_project/config/routes/routes_name.dart';
 import 'package:fyp_project/services/urls.dart';
 
@@ -48,6 +50,10 @@ class Routes {
           case RoutesName.localUploadScreen:
              return MaterialPageRoute(builder: (_) => LocalUploadScreen());
 
+        //Donation Module
+          case RoutesName.userDonationScreen:
+             final args = settings.arguments as UserdonationArguments;
+             return MaterialPageRoute(builder: (_) => DonationScreen(userId: args.userId, isAdmin: args.isAdmin));
 
          //default case
          default:

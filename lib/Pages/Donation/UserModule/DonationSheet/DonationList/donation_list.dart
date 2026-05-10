@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fyp_project/Model/NGOModel/ngo_model.dart';
-import 'package:fyp_project/Pages/Donation/DonationSheet/DonationList/donation_card.dart';
+import 'package:fyp_project/Pages/Donation/UserModule/DonationSheet/DonationList/donation_card.dart';
 import 'package:fyp_project/blocs/donation/donation_bloc.dart';
 import 'package:fyp_project/config/Components/Custom_Exception.dart';
 import 'package:fyp_project/config/Components/Custom_Loading.dart';
@@ -21,11 +21,11 @@ class DonationList extends StatelessWidget {
             previous.donationNGOs.length != current.donationNGOs.length ||
             previous.selectedNgoId!=current.selectedNgoId,
         builder: (context, state) {
-          if (state.verifiedNGOsDonationStatus ==
-              VerifiedNGOsDonationStatus.loading) {
+          if (state.verifiedNGOsDonationStatus == VerifiedNGOsDonationStatus.loading 
+          ) {
             return SizedBox(
               height: 300,
-              child: CustomLoading(color: theme.primaryColor),
+              child: Center(child: CustomLoading(color: theme.primaryColor)),
             );
           } else if (state.verifiedNGOsDonationStatus ==
               VerifiedNGOsDonationStatus.error) {
@@ -40,6 +40,7 @@ class DonationList extends StatelessWidget {
               itemCount: ngos.length + 1,
               itemBuilder: (context, index) {
                 final isCard = index == ngos.length;
+
                 if (isCard) {
                   return GestureDetector(
                     onTap: () {

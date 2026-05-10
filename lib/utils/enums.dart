@@ -36,4 +36,9 @@ enum PostCommentLoadStatus {initail,loading,success,error}
 enum LocalSeverityStatus{initail,loading,success,error}
 
 enum VerifiedNGOsDonationStatus{initail,loading,success,error}
+enum DonationTransactionStatus{initail,loading,success,error}
 enum DonationStatus{initail,loading,success,error}
+enum DonationMethod{ngo,card}
+
+
+enum DashboardStatus{initail,loading,success,error}

@@ -79,10 +79,10 @@ class FirebaseRepository {
 
         } 
       
-       Stream<List<QueryDocumentSnapshot>> listenToData({required String path})
+       Stream<List<QueryDocumentSnapshot>> listenToData({required String path,String? orderby})
        {
               try{
-                  return  _firestoreService.listenToCollection(collectionPath: path).map((event) { 
+                  return  _firestoreService.listenToCollection(collectionPath: path,orderby: orderby).map((event) { 
                          return event.docs; 
                     });                  
               } on SocketException {
@@ -118,10 +118,11 @@ class FirebaseRepository {
           required String path,
           required String key,
           required String query,
+          String? orderBy,
         })
        {
               try{
-                  return  _firestoreService.searchDocsFromCollection(collectionPath: path,key: key,query: query)
+                  return  _firestoreService.searchDocsFromCollection(collectionPath: path,key: key,query: query,orderBy: orderBy)
                   .map((event) { 
                        return event.docs; 
                     });                  

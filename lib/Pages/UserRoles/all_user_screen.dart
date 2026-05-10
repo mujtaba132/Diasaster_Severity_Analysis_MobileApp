@@ -7,14 +7,14 @@ import 'package:fyp_project/config/Components/Custom_Appbar.dart';
 import 'package:fyp_project/main.dart';
 
 
-class AssignUserRoles extends StatefulWidget {
-  const AssignUserRoles({super.key});
+class AllUsersScreen extends StatefulWidget {
+  const AllUsersScreen({super.key});
 
   @override
-  State<AssignUserRoles> createState() => _AssignUserRolesState();
+  State<AllUsersScreen> createState() => _AllUsersScreenState();
 }
 
-class _AssignUserRolesState extends State<AssignUserRoles> {
+class _AllUsersScreenState extends State<AllUsersScreen> {
   late UserBloc _userBloc;
   late TextEditingController _textEditingController;
 

@@ -26,10 +26,21 @@ class NetworkServicesApi extends BaseApiService{
 
 
   @override
-  Future<dynamic> postAPI(String url,var data) async{
+    Future<dynamic> postAPI(String url,var data,Map<String,dynamic>? headers) async{
       dynamic jsonResponse;
       try{
-             final response = await _dio.post(url,data: data);
+            final Response response;
+             headers != null?
+             response = await _dio.post(
+              url,
+              data: data,
+              options: Options(
+                headers: headers,
+                contentType:Headers.formUrlEncodedContentType)):
+              response = await _dio.post(
+              url,
+              data: data,
+              );
              jsonResponse = getAPIResponse(response);
     
       } on TimeoutException {
@@ -68,14 +79,14 @@ class NetworkServicesApi extends BaseApiService{
           switch (response.statusCode) {
             case 200:
                return response.data;
-            case 400:
-               return response.data;
             case 422:
               throw GeneralException('Unprocessable entitiy.');
             case 401:
               throw FobiddenException('');
             case 403:
               throw UnAuthorizedException('');
+            case 400:
+              throw GeneralException(response.data.toString());
             case 502:
               throw GeneralException('Server error - the server failed to fulfil an apparently valid request');
             default:

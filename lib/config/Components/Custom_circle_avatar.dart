@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class CustomCircleAvatar extends StatelessWidget {
   final String? imageUrl;
   final String userName;
@@ -15,54 +14,61 @@ class CustomCircleAvatar extends StatelessWidget {
     this.backgroundColor,
   });
 
-  String get initials {
-    if (userName.isEmpty) return '';
-    List<String> parts = userName.trim().split(' ');
-    if (parts.length == 1) {
-      return parts[0][0].toUpperCase();
-    }
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return CircleAvatar(
       radius: radius,
-      backgroundColor: backgroundColor ?? theme.colorScheme.primary.withOpacity(0.8),
+      backgroundColor:
+          backgroundColor ??
+          theme.colorScheme.primary.withOpacity(0.12),
+
       child: ClipOval(
-        child: imageUrl == null || imageUrl!.isEmpty
-            ? _buildFallback()
-            : Image.network(
-                imageUrl!,
-                width: radius * 2,
-                height: radius * 2,
-                fit: BoxFit.cover,
+        child:
+            imageUrl == null || imageUrl!.trim().isEmpty
+                ? _buildFallback(theme)
+                : Image.network(
+                  imageUrl!,
+                  width: radius * 2,
+                  height: radius * 2,
+                  fit: BoxFit.cover,
 
-                // Loading
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) return child;
-                   return const SizedBox.shrink();
-                },
+                  loadingBuilder: (context, child, progress) {
+                    if (progress == null) return child;
 
-                // Error
-                errorBuilder: (context, error, stackTrace) {
-                  return _buildFallback();
-                },
-              ),
+                    return _buildFallback(theme);
+                  },
+
+                  errorBuilder: (context, error, stackTrace) {
+                    return _buildFallback(theme);
+                  },
+                ),
       ),
     );
   }
 
-  Widget _buildFallback() {
-    return Center(
-      child: Text(
-        initials,
-        style: TextStyle(
-          fontSize: radius * 0.8,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+
+  Widget _buildFallback(ThemeData theme) {
+    return Container(
+      width: radius * 2,
+      height: radius * 2,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [
+            theme.colorScheme.primary.withOpacity(0.4),
+            theme.colorScheme.primary.withOpacity(0.7),
+          ],
+          begin: Alignment.topLeft, 
+          end: Alignment.bottomRight,
         ),
+      ),
+
+      child: Icon(
+        Icons.person_rounded,
+        size: radius * 1.2,
+        color: Colors.white,
       ),
     );
   }

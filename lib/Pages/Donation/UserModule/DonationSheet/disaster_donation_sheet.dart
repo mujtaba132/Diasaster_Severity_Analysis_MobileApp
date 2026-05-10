@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fyp_project/Pages/Donation/DonationSheet/DonationAmount/donation_amount.dart';
-import 'package:fyp_project/Pages/Donation/DonationSheet/DonationList/donation_list.dart';
+import 'package:fyp_project/Pages/Donation/UserModule/DonationSheet/DonationAmount/donation_amount.dart';
+import 'package:fyp_project/Pages/Donation/UserModule/DonationSheet/DonationBtn/donation_btn.dart';
+import 'package:fyp_project/Pages/Donation/UserModule/DonationSheet/DonationList/donation_list.dart';
 import 'package:fyp_project/blocs/donation/donation_bloc.dart';
 import 'package:fyp_project/main.dart';
 
 class DonationBottomSheet extends StatefulWidget {
-  const DonationBottomSheet({super.key});
+
+  final String userId;
+  const DonationBottomSheet({super.key,required this.userId});
 
   @override
   State<DonationBottomSheet> createState() => DonationBottomSheetState();
@@ -20,7 +23,7 @@ class DonationBottomSheetState extends State<DonationBottomSheet> {
   void initState() {
     super.initState();
     _donationBoc = getit<DonationBloc>();
-    _donationBoc.add(OnLoadDonationNGOsEvent());
+    _donationBoc.add(OnLoadDonationNGOsEvent(userId: widget.userId));
   }
 
   @override
@@ -31,7 +34,7 @@ class DonationBottomSheetState extends State<DonationBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+  
 
     return BlocProvider.value(
       value: _donationBoc,
@@ -55,7 +58,6 @@ class DonationBottomSheetState extends State<DonationBottomSheet> {
                   ),
                 ),
 
-                /// PAYMENT OPTIONS (NGO + CARD IN SAME SELECTABLE LIST)
                 DonationList(),
 
                 const SizedBox(height: 12),
@@ -64,29 +66,8 @@ class DonationBottomSheetState extends State<DonationBottomSheet> {
 
                 const SizedBox(height: 15),
 
-                /// DONATE BUTTON
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: const LinearGradient(
-                        colors: [Color.fromARGB(255, 48, 68, 216), Color.fromARGB(255, 15, 18, 146)],
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "Donate Now",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                DonationBtn(),
+                
               ],
             ),
           ),

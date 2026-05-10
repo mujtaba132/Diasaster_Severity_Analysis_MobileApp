@@ -16,44 +16,105 @@ class ReportCard extends StatelessWidget {
     required this.role,
   });
 
-
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Hero(
       tag: report.reportId!,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
           color: theme.cardColor,
           boxShadow: [
             BoxShadow(
-              color: theme.shadowColor.withOpacity(0.2),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            )
+              color: Colors.black.withOpacity(isDark ? 0.25 : 0.08),
+              blurRadius: 18,
+              offset: const Offset(0, 10),
+            ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
             
-                  // MEDIA PREVIEW          
-            GestureDetector(
-              onTap: onTap,
-              child: CardMediaPreview(report: report,role: role)),
-    
-                 // CONTENT                     
-            CardSeverity(report: report,role: role),
-    
-          ]),   
+              children: [
+            
+                /// ======================
+                /// MEDIA SECTION (ONLY)
+                /// ======================
+                GestureDetector(
+                  onTap: onTap,
+                  child: Stack(
+                    children: [
+                
+                      CardMediaPreview(
+                        report: report,
+                        role: role,
+                      ),
+                
+                      /// ✅ SMALL SEVERITY BADGE (NOT FULL CARD)
+                      Positioned(
+                        bottom: 12,
+                        left: 12,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.55),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.warning_amber_rounded,
+                                size: 16,
+                                color: Colors.orange,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                report.severity.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            
+                /// ======================
+                /// DETAILS SECTION 
+                /// ======================
+                Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: CardSeverity(
+                    report: report,
+                    role: role,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
-
-
- 
 }
-
