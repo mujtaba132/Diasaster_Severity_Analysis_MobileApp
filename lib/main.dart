@@ -7,6 +7,7 @@ import 'package:fyp_project/Core/appkeys.dart';
 import 'package:fyp_project/Core/apptheme.dart';
 import 'package:fyp_project/blocs/admin_dashboard/admin_dashboard_bloc.dart';
 import 'package:fyp_project/blocs/donation_transaction/donation_transaction_bloc.dart';
+import 'package:fyp_project/repository/dashboardRepository/dashboard_donation.dart';
 import 'package:fyp_project/repository/dashboardRepository/dashboard_ngos.dart';
 import 'package:fyp_project/repository/dashboardRepository/dashboard_posts.dart';
 import 'package:fyp_project/repository/dashboardRepository/dashboard_users.dart';
@@ -39,32 +40,30 @@ import 'package:fyp_project/services/Payment/Stripe_Payment/stripe_payment_servi
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
+final getit = GetIt.instance;
+List<CameraDescription> camera = [];
 
-final getit = GetIt.instance; 
-List<CameraDescription> camera=[];
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   camera = await availableCameras();
-  
+
   await StripePaymentService.init();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   serviceloader();
-  runApp(MultiProvider(
-    providers: [
-          ChangeNotifierProvider(create: (_) => BottomNavProvider()),
-          ChangeNotifierProvider(create: (_) => UploadProvider(),)
-    ],
-    child: MultiBlocProvider(
+  runApp(
+    MultiProvider(
       providers: [
-           BlocProvider(create: (context) => RequestNgoBloc(getit()))
+        ChangeNotifierProvider(create: (_) => BottomNavProvider()),
+        ChangeNotifierProvider(create: (_) => UploadProvider()),
       ],
-      child: const MyApp()),
-  ));
+      child: MultiBlocProvider(
+        providers: [BlocProvider(create: (context) => RequestNgoBloc(getit()))],
+        child: const MyApp(),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -80,75 +79,112 @@ class MyApp extends StatelessWidget {
       scaffoldMessengerKey: AppKeys.scaffoldMessengerKey,
       navigatorKey: AppKeys.navigatorKey,
       onGenerateRoute: Routes.generateRoutes,
-      initialRoute: RoutesName.homeScreen,
+      initialRoute: RoutesName.splashScreen,
     );
   }
 }
 
+void serviceloader() {
+  getit.registerLazySingleton<SignupRepository>(() => SignupRepository());
+  getit.registerLazySingleton<LoginRepository>(() => LoginRepository());
+  getit.registerFactory<LoginBloc>(
+    () => LoginBloc(getit<LoginRepository>(), getit<FirebaseRepository>()),
+  );
 
-void serviceloader()
-{
-    getit.registerLazySingleton<SignupRepository>(()=> SignupRepository());
-    getit.registerLazySingleton<LoginRepository>(()=> LoginRepository());
-    getit.registerFactory<LoginBloc>(() => LoginBloc(
-          getit<LoginRepository>(),
-          getit<FirebaseRepository>()));
+  getit.registerLazySingleton<Forgetpasswordrepository>(
+    () => Forgetpasswordrepository(),
+  );
+  getit.registerFactory<SignupBloc>(
+    () => SignupBloc(
+      getit<LoginRepository>(),
+      getit<SignupRepository>(),
+      getit<FirebaseRepository>(),
+    ),
+  );
 
-    getit.registerLazySingleton<Forgetpasswordrepository>(() => Forgetpasswordrepository());
-    getit.registerFactory<SignupBloc>(() =>  SignupBloc( 
-        getit<LoginRepository>(), 
-        getit<SignupRepository>(),
-        getit<FirebaseRepository>()));
+  getit.registerLazySingleton<Cloudinaryrepository>(
+    () => Cloudinaryrepository(),
+  );
+  getit.registerLazySingleton<FirebaseRepository>(() => FirebaseRepository());
+  getit.registerFactory<RegisterNgoBloc>(
+    () => RegisterNgoBloc(
+      getit<Cloudinaryrepository>(),
+      getit<FirebaseRepository>(),
+      getit<CurrentUserRepository>(),
+    ),
+  );
 
-    
-    getit.registerLazySingleton<Cloudinaryrepository>(() => Cloudinaryrepository());
-    getit.registerLazySingleton<FirebaseRepository>(() => FirebaseRepository());
-    getit.registerFactory<RegisterNgoBloc>(() =>  RegisterNgoBloc(
-        getit<Cloudinaryrepository>(), 
-        getit<FirebaseRepository>(),
-        getit<CurrentUserRepository>()));
-        
-
-    getit.registerLazySingleton<PickMediaRepository>(() => PickMediaRepository());
-    getit.registerLazySingleton<MediaLocationRepository>(() => MediaLocationRepository());
-    getit.registerLazySingleton<SQLLiteMediaRepository>(() => SQLLiteMediaRepository());
-    getit.registerLazySingleton<ModelPredictRepository>(() => ModelPredictRepository());
-    getit.registerFactory<CameraBloc>(() =>  CameraBloc(
-      getit<PickMediaRepository>(), 
+  getit.registerLazySingleton<PickMediaRepository>(() => PickMediaRepository());
+  getit.registerLazySingleton<MediaLocationRepository>(
+    () => MediaLocationRepository(),
+  );
+  getit.registerLazySingleton<SQLLiteMediaRepository>(
+    () => SQLLiteMediaRepository(),
+  );
+  getit.registerLazySingleton<ModelPredictRepository>(
+    () => ModelPredictRepository(),
+  );
+  getit.registerFactory<CameraBloc>(
+    () => CameraBloc(
+      getit<PickMediaRepository>(),
       getit<MediaLocationRepository>(),
       getit<SQLLiteMediaRepository>(),
-      getit<ModelPredictRepository>(),));
+      getit<ModelPredictRepository>(),
+    ),
+  );
 
-   getit.registerLazySingleton<CurrentUserRepository>(() => CurrentUserRepository());
-   getit.registerFactory<CommentBloc>(() => CommentBloc(
-           getit<FirebaseRepository>(), 
-           getit<CurrentUserRepository>()));
+  getit.registerLazySingleton<CurrentUserRepository>(
+    () => CurrentUserRepository(),
+  );
+  getit.registerFactory<CommentBloc>(
+    () => CommentBloc(
+      getit<FirebaseRepository>(),
+      getit<CurrentUserRepository>(),
+    ),
+  );
 
-  
-   getit.registerFactory<LocalSeverityBloc>(() => LocalSeverityBloc(
+  getit.registerFactory<LocalSeverityBloc>(
+    () => LocalSeverityBloc(
       getit<SQLLiteMediaRepository>(),
       getit<Cloudinaryrepository>(),
       getit<FirebaseRepository>(),
       getit<CurrentUserRepository>(),
-   ));
+    ),
+  );
 
-    getit.registerLazySingleton<StripePaymentRepository>(() => StripePaymentRepository());
-      getit.registerFactory<DonationBloc>(() => DonationBloc(
-       getit<FirebaseRepository>(),
-       getit<CurrentUserRepository>(),
-       getit<StripePaymentRepository>(),
-   ));
-   
-   getit.registerFactory<DonationTransactionBloc>(() => DonationTransactionBloc(
-       getit<FirebaseRepository>(),
-   ));
-   
-   getit.registerLazySingleton<DashboardNgoRepository>(() => DashboardNgoRepository());
-   getit.registerLazySingleton<DashboardUsersRepository>(() => DashboardUsersRepository());
-   getit.registerLazySingleton<DashboardPostRepository>(() => DashboardPostRepository());
-   getit.registerFactory<AdminDashboardBloc>(() => AdminDashboardBloc(
-       getit<DashboardNgoRepository>(),
-       getit<DashboardPostRepository>(),
-       getit<DashboardUsersRepository>(),
-   ));
+  getit.registerLazySingleton<StripePaymentRepository>(
+    () => StripePaymentRepository(),
+  );
+  getit.registerFactory<DonationBloc>(
+    () => DonationBloc(
+      getit<FirebaseRepository>(),
+      getit<CurrentUserRepository>(),
+      getit<StripePaymentRepository>(),
+    ),
+  );
+
+  getit.registerFactory<DonationTransactionBloc>(
+    () => DonationTransactionBloc(getit<FirebaseRepository>()),
+  );
+
+  getit.registerLazySingleton<DashboardNgoRepository>(
+    () => DashboardNgoRepository(),
+  );
+  getit.registerLazySingleton<DashboardUsersRepository>(
+    () => DashboardUsersRepository(),
+  );
+  getit.registerLazySingleton<DashboardPostRepository>(
+    () => DashboardPostRepository(),
+  );
+  getit.registerLazySingleton<DashboardDonationRepository>(
+    () => DashboardDonationRepository(),
+  );
+  getit.registerFactory<AdminDashboardBloc>(
+    () => AdminDashboardBloc(
+      getit<DashboardNgoRepository>(),
+      getit<DashboardPostRepository>(),
+      getit<DashboardUsersRepository>(),
+      getit<DashboardDonationRepository>(),
+    ),
+  );
 }

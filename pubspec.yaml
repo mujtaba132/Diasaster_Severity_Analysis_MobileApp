@@ -77,6 +77,10 @@ dependencies:
   another_flushbar: ^1.12.32
   flutter_stripe: ^12.6.0
   flutter_animate: ^4.5.0
+  onnxruntime: ^1.4.1
+  shared_preferences: ^2.5.5
+  connectivity_plus: ^7.1.1
+  material_design_icons_flutter: ^7.0.0
 
 dev_dependencies:
   flutter_test:

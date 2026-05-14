@@ -15,7 +15,8 @@ class PickMediaService extends MediaService{
              
              final FilePickerResult? result = await FilePicker.platform.pickFiles(
               type: FileType.custom,
-              allowedExtensions: ['png','jpeg','jpg','mp4','mov'],
+              allowMultiple: true,
+              allowedExtensions: ['png','jpg'],
              );
   
             if(result!=null){

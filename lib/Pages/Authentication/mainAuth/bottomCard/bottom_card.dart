@@ -4,6 +4,7 @@ import 'package:fyp_project/Pages/Authentication/custom_widgets.dart/screen_Swit
 import 'package:fyp_project/Pages/Authentication/mainAuth/bottomCard/createAccount_Btn.dart';
 import 'package:fyp_project/Pages/Authentication/mainAuth/bottomCard/googleLogin_Btn.dart';
 import 'package:fyp_project/blocs/login/login_bloc.dart';
+import 'package:fyp_project/config/routes/routes_name.dart';
 import 'package:fyp_project/main.dart';
 import 'package:fyp_project/responsible/mediaquery.dart';
 
@@ -15,13 +16,12 @@ class BottomCard extends StatefulWidget {
 }
 
 class _BottomCardState extends State<BottomCard> {
-
   late LoginBloc _loginbloc;
 
-   @override
+  @override
   void initState() {
     super.initState();
-    _loginbloc= getit<LoginBloc>();
+    _loginbloc = getit<LoginBloc>();
   }
 
   @override
@@ -29,6 +29,7 @@ class _BottomCardState extends State<BottomCard> {
     _loginbloc.close();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final Responsive screen = Responsive(context);
@@ -39,7 +40,7 @@ class _BottomCardState extends State<BottomCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 400),
         width: double.infinity,
-          constraints: BoxConstraints(
+        constraints: BoxConstraints(
           minHeight: screen.screenheight() * 0.45,
           maxHeight: screen.screenheight() * 0.60,
         ),
@@ -68,10 +69,8 @@ class _BottomCardState extends State<BottomCard> {
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            
-            children: [
 
-               
+            children: [
               // Premium drag indicator
               Center(
                 child: Container(
@@ -83,48 +82,51 @@ class _BottomCardState extends State<BottomCard> {
                   ),
                 ),
               ),
-          
-              SizedBox(height:screen.screenheight() * 0.04),
-          
+
+              SizedBox(height: screen.screenheight() * 0.04),
+
               Text(
                 "Get Started",
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-          
+
               SizedBox(height: screen.screenheight() * 0.022),
-          
+
               Text(
                 "Register for events and create images of activities you plan to attend.",
                 style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
               ),
-          
+
               SizedBox(height: screen.screenheight() * 0.030),
-          
+
               CreateaccountBtn(),
-          
+
               SizedBox(height: screen.screenheight() * 0.015),
-          
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("OR"),
-                ],
+                children: [const Text("OR")],
               ),
-          
+
               SizedBox(height: screen.screenheight() * 0.015),
 
               GoogleloginBtn(),
-               
+
               SizedBox(height: screen.screenheight() * 0.042),
-          
-              
-              ScreenSwitch(title: "Already have an account? ", btnName: 'Login', onTap: (){})
-                
+
+              ScreenSwitch(
+                title: "Already have an account? ",
+                btnName: 'Login',
+                onTap: () {
+                  Navigator.pushNamed(context, RoutesName.loginScreen);
+                },
+              ),
             ],
           ),
-        )),
+        ),
+      ),
     );
   }
 }

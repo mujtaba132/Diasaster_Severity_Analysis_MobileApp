@@ -7,7 +7,6 @@ import 'package:fyp_project/blocs/citizen/citizen_feed_bloc.dart';
 import 'package:fyp_project/config/Components/Custom_Appbar.dart';
 import 'package:fyp_project/main.dart';
 
-
 class CitizenFeedListScreen extends StatefulWidget {
   const CitizenFeedListScreen({super.key});
 
@@ -35,28 +34,21 @@ class _CitizenFeedListScreenState extends State<CitizenFeedListScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocProvider.value(
       value: _citizenFeedBloc,
       child: Scaffold(
         appBar: CustomAppbar(title: "Today Updates"),
         body: Padding(
-          padding: const EdgeInsets.only(
-            top: 10,
-          ),
+          padding: const EdgeInsets.only(top: 10),
           child: Column(
             children: [
-          
               CitizenFeedSearch(textEditingController: _textEditingController),
 
-              const SizedBox(height: 15),
-             
+              const SizedBox(height: 10),
+
               CitizenFeedFiltersScreen(),
-               
-              const SizedBox(height: 15),
-          
+
               CitizenFeedList(),
-              
             ],
           ),
         ),

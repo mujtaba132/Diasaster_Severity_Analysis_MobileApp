@@ -5,41 +5,29 @@ import 'package:fyp_project/Pages/Authentication/mainAuth/topImages/top_Images.d
 class MainAuthScreen extends StatefulWidget {
   const MainAuthScreen({super.key});
 
-
   @override
   State<MainAuthScreen> createState() => _MainAuthScreenState();
 }
 
 class _MainAuthScreenState extends State<MainAuthScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Stack(
+              children: [
+                // ---------- TOP IMAGE AREA ----------
+                Positioned.fill(child: TopImages()),
 
-
-@override
-Widget build(BuildContext context) {
-
-  return Scaffold(
-    body: SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Stack(
-            children: [
-
-              // ---------- TOP IMAGE AREA ----------
-
-              Positioned.fill(child: TopImages()),
-
-              // ---------- BOTTOM CARD ----------
-            
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: BottomCard(),
-              ),
-            ],
-          );
-        },
+                // ---------- BOTTOM CARD ----------
+                Align(alignment: Alignment.bottomCenter, child: BottomCard()),
+              ],
+            );
+          },
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
-}
-
-

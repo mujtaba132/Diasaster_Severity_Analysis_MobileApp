@@ -10,31 +10,24 @@ class TopImages extends StatefulWidget {
 }
 
 class _TopImagesState extends State<TopImages> {
-  
-
   @override
   Widget build(BuildContext context) {
-     final Responsive app =  Responsive(context);
-    return 
-      Column(
-                  children: [
-                    Expanded(
-                      flex: 6,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: app.screenWidth() * 0.06,
-                          vertical:  app.screenheight() * 0.02,
-                        ),
-                        child: const Center(
-                          child: AnimatedImageGrid(),
-                        ),
-                      ),
-                    ),
+    final Responsive app = Responsive(context);
+    return Column(
+      children: [
+        Expanded(
+          flex: 6,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: app.screenWidth() * 0.06,
+              vertical: app.screenheight() * 0.02,
+            ),
+            child: Center(child: AnimatedImageGrid()),
+          ),
+        ),
 
-                    // Space reserved for bottom card overlap
-                    SizedBox(height: app.screenheight() * 0.49),
-                  ],
-      );
+        SizedBox(height: app.screenheight() * 0.49),
+      ],
+    );
   }
 }
-

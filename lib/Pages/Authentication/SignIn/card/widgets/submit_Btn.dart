@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fyp_project/ModulePages/module.dart';
 import 'package:fyp_project/blocs/login/login_bloc.dart';
 import 'package:fyp_project/config/Components/CustomSnackbar.dart';
 import 'package:fyp_project/config/Components/Custom_Btns.dart';
+import 'package:fyp_project/config/routes/routes_arguments/homepage_arguments.dart';
 import 'package:fyp_project/config/routes/routes_name.dart';
 import 'package:fyp_project/utils/enums.dart';
 
@@ -14,19 +16,23 @@ class LoginSubmitBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return BlocListener<LoginBloc, LoginState>(
-      listenWhen: (previous, current) => previous.loginStatus != current.loginStatus,
+      listenWhen: (previous, current) =>
+          previous.loginStatus != current.loginStatus,
       listener: (context, state) {
-             if(state.loginStatus==LoginStatus.error)
-             {
-                 CustomSnackBar.error(state.error.toString());
-             }
-             else if(state.loginStatus == LoginStatus.success)
-             {
-                 Navigator.pushNamed(context, RoutesName.homeScreen);
-             }
+        if (state.loginStatus == LoginStatus.error) {
+          CustomSnackBar.error(state.error.toString());
+        } else if (state.loginStatus == LoginStatus.success) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            RoutesName.homeScreen,
+            arguments: HomePageArguments(pages: AppModule().user),
+            (route) => false,
+          );
+        }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
-        buildWhen: (previous, current) =>previous.loginStatus != current.loginStatus,
+        buildWhen: (previous, current) =>
+            previous.loginStatus != current.loginStatus,
         builder: (context, state) {
           return SizedBox(
             width: double.infinity,

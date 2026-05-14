@@ -2,146 +2,200 @@ import 'package:flutter/material.dart';
 import 'package:fyp_project/Model/mediaModel/media_model.dart';
 import 'package:fyp_project/Pages/comments/citizen_feed_comments.dart';
 import 'package:fyp_project/Pages/feed/disaster_feed/disaster_feed_card/feed_severity/feed_severity_dropdown.dart';
-import 'package:fyp_project/Pages/feed/disaster_feed/disaster_feed_card/feed_severity/feed_severity_indicator.dart';
 import 'package:fyp_project/utils/enums.dart';
 
 class CardSeverity extends StatelessWidget {
   final MediaModel report;
   final Role role;
 
-  const CardSeverity({
-    super.key,
-    required this.report,
-    required this.role,
-  });
+  const CardSeverity({super.key, required this.report, required this.role});
+
+  Color _getSeverityColor() {
+    switch (report.severity.toString().toLowerCase()) {
+      case "major_damage":
+        return Colors.redAccent;
+
+      case "minor_damage":
+        return Colors.orange;
+
+      case "no_damage":
+        return Colors.green;
+
+      case "destroyed":
+        return Colors.deepPurple;
+
+      default:
+        return Colors.blue;
+    }
+  }
+
+  IconData _getSeverityIcon() {
+    switch (report.severity.toString().toLowerCase()) {
+      case "major_damage":
+        return Icons.warning_amber_rounded;
+
+      case "minor_damage":
+        return Icons.error_outline_rounded;
+
+      case "no_damage":
+        return Icons.verified_rounded;
+
+      case "destroyed":
+        return Icons.dangerous_rounded;
+
+      default:
+        return Icons.crisis_alert_rounded;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
+    final severityColor = _getSeverityColor();
+    final severityIcon = _getSeverityIcon();
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeInOut,
+      padding: const EdgeInsets.all(14),
 
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(24),
 
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: isDark
-              ? [
-                  const Color(0xff0F172A),
-                  const Color(0xff111827),
-                ]
-              : [
-                  Colors.white,
-                  const Color(0xffF8FAFC),
-                ],
+              ? [const Color(0xff0F172A), const Color(0xff111827)]
+              : [Colors.white, const Color(0xffF8FAFC)],
         ),
 
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.12),
-        ),
+        border: Border.all(color: severityColor.withOpacity(0.18), width: 1.2),
 
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.25 : 0.06),
-            blurRadius: 18,
+            color: severityColor.withOpacity(isDark ? 0.22 : 0.12),
+            blurRadius: 20,
+            spreadRadius: 1,
             offset: const Offset(0, 8),
           ),
         ],
       ),
 
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          /// LEFT ICON
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            height: 58,
+            width: 58,
 
-          // /// 🔥 SEVERITY INDICATOR (LEFT)
-          // Container(
-          //   padding: const EdgeInsets.all(10),
-          //   decoration: BoxDecoration(
-          //     shape: BoxShape.circle,
-          //     color: Colors.red.withOpacity(0.08),
-          //   ),
-          //   child: AnimatedSeverityIndicator(
-          //     severity: report.severity!,
-          //   ),
-          // ),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+
+              gradient: LinearGradient(
+                colors: [severityColor, severityColor.withOpacity(0.7)],
+              ),
+
+              boxShadow: [
+                BoxShadow(
+                  color: severityColor.withOpacity(0.35),
+                  blurRadius: 14,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+
+            child: Icon(severityIcon, color: Colors.white, size: 28),
+          ),
 
           const SizedBox(width: 14),
 
-          /// 📄 MAIN INFO
+          /// CONTENT
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                /// DISASTER TYPE
+                Text(
+                  report.disasterType ?? "Unknown Disaster",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
 
-                /// TITLE + ICON
-                Row(
-                  children: [
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      size: 18,
-                      color: Colors.orange,
-                    ),
-                    const SizedBox(width: 6),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                    letterSpacing: 0.2,
+                  ),
+                ),
 
-                    Expanded(
-                      child: Text(
-                        report.disasterType!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                const SizedBox(height: 8),
 
-                        style: theme.textTheme.titleMedium?.copyWith(
+                /// SEVERITY BADGE
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: severityColor.withOpacity(0.12),
+                    border: Border.all(color: severityColor.withOpacity(0.25)),
+                  ),
+
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(severityIcon, size: 14, color: severityColor),
+
+                      const SizedBox(width: 5),
+
+                      Text(
+                        report.severity
+                            .toString()
+                            .replaceAll("_", " ")
+                            .toUpperCase(),
+
+                        style: TextStyle(
+                          color: severityColor,
                           fontWeight: FontWeight.w700,
+                          fontSize: 11,
+                          letterSpacing: 0.4,
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
 
-                const SizedBox(height: 6),
-
-                /// LOCATION
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      size: 14,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(width: 4),
-
-                    Expanded(
-                      child: Text(
-                        report.location!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.hintColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
 
                 /// TIME
                 Row(
                   children: [
                     Icon(
-                      Icons.access_time_rounded,
+                      Icons.access_time_filled_rounded,
                       size: 14,
-                      color: Colors.grey,
+                      color: theme.hintColor,
                     ),
-                    const SizedBox(width: 4),
 
-                    Text(
-                      report.timeStamp!,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.hintColor,
-                        fontSize: 11,
+                    const SizedBox(width: 5),
+
+                    Expanded(
+                      child: Text(
+                        report.timeStamp ?? "",
+
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.hintColor,
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
@@ -152,47 +206,78 @@ class CardSeverity extends StatelessWidget {
 
           const SizedBox(width: 10),
 
-          /// ACTIONS
-          Column(
-            children: [
+          /// RIGHT ACTIONS
+          if (role == Role.admin)
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              padding: const EdgeInsets.all(6),
 
-              /// ADMIN ACTION
-              if (role == Role.admin)
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: FeedSeverityDropdown(report: report),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.blue.withOpacity(0.08),
+                border: Border.all(color: Colors.blue.withOpacity(0.15)),
+              ),
+
+              child: FeedSeverityDropdown(report: report),
+            ),
+
+          if (role == Role.citizen)
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => CommentSection(postId: report.reportId!),
+                );
+              },
+
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
                 ),
 
-              /// CITIZEN ACTION
-              if (role == Role.citizen)
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
+
+                  gradient: LinearGradient(
+                    colors: [Colors.green, Colors.green.shade400],
                   ),
-                  child: TextButton.icon(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (_) => CommentSection(
-                          postId: report.reportId!,
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.comment_rounded,
+
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.green.withOpacity(0.25),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(
+                      Icons.mode_comment_rounded,
+                      color: Colors.white,
                       size: 18,
                     ),
-                    label: const Text("Comment"),
-                  ),
+
+                    SizedBox(width: 6),
+
+                    Text(
+                      "Comment",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
                 ),
-            ],
-          ),
+              ),
+            ),
         ],
       ),
     );

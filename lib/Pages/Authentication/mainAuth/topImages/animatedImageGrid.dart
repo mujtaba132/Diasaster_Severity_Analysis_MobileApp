@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp_project/Pages/Authentication/mainAuth/topImages/dropContainer.dart';
 
 class AnimatedImageGrid extends StatelessWidget {
-   const AnimatedImageGrid({super.key});
+  const AnimatedImageGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class AnimatedImageGrid extends StatelessWidget {
           image: 'assets/images/Image_03.jpg',
         ),
         Drop_Container(
-          height: 120,
+          height: 140,
           width: 120,
           topLeft: 12,
           topRight: 40,
@@ -50,8 +50,4 @@ class AnimatedImageGrid extends StatelessWidget {
       ],
     );
   }
-  
 }
-
-
-

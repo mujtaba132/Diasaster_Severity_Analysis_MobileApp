@@ -5,6 +5,7 @@ import 'package:fyp_project/Pages/Authentication/custom_widgets.dart/auth_conten
 import 'package:fyp_project/Pages/Authentication/custom_widgets.dart/background_gradient.dart';
 import 'package:fyp_project/Pages/Authentication/custom_widgets.dart/screen_Switch.dart';
 import 'package:fyp_project/blocs/login/login_bloc.dart';
+import 'package:fyp_project/config/routes/routes_name.dart';
 import 'package:fyp_project/main.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -24,7 +25,7 @@ class _SigninScreenState extends State<SigninScreen>
   void initState() {
     super.initState();
 
-    _loginBloc= getit<LoginBloc>();
+    _loginBloc = getit<LoginBloc>();
 
     _controller = AnimationController(
       vsync: this,
@@ -59,49 +60,49 @@ class _SigninScreenState extends State<SigninScreen>
         body: SafeArea(
           child: Stack(
             children: [
-
               BackgroundGradient(),
 
               ScaleTransition(
                 scale: _scaleAnimation,
-                child:  SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: horizontalPadding,
-                        vertical: size.height * 0.04,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding,
+                      vertical: size.height * 0.04,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: size.height * 0.07),
 
-                          SizedBox(height: size.height * 0.07),
+                        AuthScreenContent(
+                          title: 'Welcome Back',
+                          subtitle: 'Continue your jounrey with us.',
+                        ),
 
-                          AuthScreenContent(
-                            title: 'Welcome Back',
-                            subtitle: 'Continue your jounrey with us.',
-                          ),
+                        SizedBox(height: size.height * 0.10),
 
-                          SizedBox(height: size.height * 0.10),
+                        LoginCard(),
 
-                          LoginCard(),
+                        SizedBox(height: size.height * 0.05),
 
-                          SizedBox(height: size.height * 0.05),
+                        ScreenSwitch(
+                          title: "Dont have an account? ",
+                          btnName: 'Create Account',
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              RoutesName.signupScreen,
+                            );
+                          },
+                        ),
 
-                          ScreenSwitch(
-                            title: "Dont have an account? ",
-                            btnName: 'Create Account',
-                            onTap: () {
-                                
-                            },
-                          ),
-
-                          SizedBox(height: size.height * 0.05),
-
-                        ],
-                      ),
+                        SizedBox(height: size.height * 0.05),
+                      ],
                     ),
                   ),
                 ),
+              ),
             ],
           ),
         ),
